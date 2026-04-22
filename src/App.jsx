@@ -78,11 +78,11 @@ const textLabels = {
   // CASE FOLDER
   AK: "SCSR LINK",
   AM: "HIP LINK",
-  AU: "DATE",
+  AU: "TALAAN DATE",
   AW: "PINALAKAS FDS PACKAGE LINK",
-  AX: "DATE",
+  AX: "PINALAKAS DATE",
   AZ: "PTEMS LINK",
-  BA: "DATE",
+  BA: "PTEMS DATE",
 
   AS: "Specific Needs",
 
@@ -286,24 +286,28 @@ function isVisible(field) {
         </div>
       )}
 
-      {/* ========================= */}
-      {/* BDM */}
-      {/* ========================= */}
-      <h3>BENEFICIARY DATA MANAGEMENT (BDM)</h3>
+     <div className="top-sections">
 
-     {["Q", "S", "U", "W", "Z", "AB"].map(id => (
-  <label key={id} style={{ display: "block" }}>
-    <input
-      type="checkbox"
-      id={id}
-      checked={isChecked(formData[id])}
-      onChange={handleChange}
-    />
-    {id}: {checkboxLabels[id]}
-  </label>
-))}
+  {/* ========================= */}
+  {/* BDM */}
+  {/* ========================= */}
+  <div className="section-card">
+    <h3>BENEFICIARY DATA MANAGEMENT (BDM)</h3>
 
-      {isVisible("R") && (
+    {["Q", "S", "U", "W", "Z", "AB"].map(id => (
+      <label key={id} style={{ display: "block" }}>
+        <input
+          type="checkbox"
+          id={id}
+          checked={isChecked(formData[id])}
+          onChange={handleChange}
+        />
+        {checkboxLabels[id]}
+      </label>
+    ))}
+<br></br>
+    {/* text inputs stay here */}
+    {isVisible("R") && (
         <label>
   {textLabels["R"]}
   <input
@@ -314,7 +318,7 @@ function isVisible(field) {
   />
 </label>
       )}
-
+   <br></br>
       {isVisible("T") && (
          <label>
   {textLabels["T"]}
@@ -326,7 +330,7 @@ function isVisible(field) {
         />
         </label>
       )}
-
+<br></br>
       {isVisible("V") && (
          <label>
   {textLabels["V"]}
@@ -338,7 +342,7 @@ function isVisible(field) {
         />
         </label>
       )}
-
+<br></br>
       {isVisible("X") && (
          <label>
   {textLabels["X"]}
@@ -350,7 +354,7 @@ function isVisible(field) {
         />
         </label>
       )}
-
+<br></br>
        {isVisible("Y") && (
          <label>
   {textLabels["Y"]}
@@ -362,7 +366,7 @@ function isVisible(field) {
         />
         </label>
       )}
-
+<br></br>
        {isVisible("AA") && (
          <label>
   {textLabels["AA"]}
@@ -375,28 +379,28 @@ function isVisible(field) {
         </label>
       )}
 
-       
+  </div>
 
-      {/* ========================= */}
-      {/* CASE FOLDER */}
-      {/* ========================= */}
-      <h3>CASE FOLDER</h3>
 
-      {["AH", "AI", "AJ", "AL", "AN", "AO", "AP", "AQ", "AR", "AT", "AV", "AY", "BB", "BC", "BD", "BE"].map(id => (
-        <label key={id} style={{ display: "block" }}>
-          <input
-            type="checkbox"
-            id={id}
-            checked={isChecked(formData[id])}
-            onChange={handleChange}
-          />
-          {id}: {checkboxLabels[id]}
-        </label>
-      ))}
+  {/* ========================= */}
+  {/* CASE FOLDER */}
+  {/* ========================= */}
+  <div className="section-card">
+    <h3>CASE FOLDER</h3>
 
-      
-
-       {isVisible("AK") && (
+    {["AH", "AI", "AJ", "AL", "AN", "AO", "AP", "AQ", "AR", "AT", "AV", "AY", "BB", "BC", "BD", "BE"].map(id => (
+      <label key={id} style={{ display: "block" }}>
+        <input
+          type="checkbox"
+          id={id}
+          checked={isChecked(formData[id])}
+          onChange={handleChange}
+        />
+        {checkboxLabels[id]}
+      </label>
+    ))}
+<br></br>
+     {isVisible("AK") && (
          <label>
   {textLabels["AK"]}
         <input
@@ -407,7 +411,7 @@ function isVisible(field) {
         />
         </label>
       )}
-
+<br></br>
       {isVisible("AM") && (
          <label>
   {textLabels["AM"]}
@@ -419,7 +423,7 @@ function isVisible(field) {
         />
         </label>
       )}
-
+<br></br>
       {isVisible("AU") && (
          <label>
   {textLabels["AU"]}
@@ -431,7 +435,7 @@ function isVisible(field) {
         />
         </label>
       )}
-
+<br></br>
       {isVisible("AW") && (
          <label>
   {textLabels["AW"]}
@@ -443,7 +447,7 @@ function isVisible(field) {
         />
         </label>
       )}
-
+<br></br>
       {isVisible("AX") && (
          <label>
   {textLabels["AX"]}
@@ -455,7 +459,7 @@ function isVisible(field) {
         />
         </label>
       )}
-
+<br></br>
       {isVisible("AZ") && (
          <label>
   {textLabels["AZ"]}
@@ -467,7 +471,8 @@ function isVisible(field) {
         />
         </label>
       )}
-
+      
+<br></br>
       {isVisible("BA") && (
          <label>
   {textLabels["BA"]}
@@ -479,6 +484,7 @@ function isVisible(field) {
         />
         </label>
       )}
+      <br></br>
        <label>
    {textLabels["AS"]}
       <input
@@ -489,22 +495,32 @@ function isVisible(field) {
       />
       </label>
 
-      {/* ========================= */}
-      {/* EXIT */}
-      {/* ========================= */}
-      <h3>EXIT / GRADUATION</h3>
+  </div>
 
-      {["BG", "BH", "BI", "BJ"].map(id => (
-        <label key={id}>
-          <input
-            type="checkbox"
-            id={id}
-            checked={isChecked(formData[id])}
-            onChange={handleChange}
-          />
-           {id}: {checkboxLabels[id]}
-        </label>
-      ))}
+
+  {/* ========================= */}
+  {/* EXIT */}
+  {/* ========================= */}
+  <div className="section-card">
+    <h3>EXIT / GRADUATION</h3>
+
+    {["BG", "BH", "BI", "BJ"].map(id => (
+      <label key={id}>
+        <input
+          type="checkbox"
+          id={id}
+          checked={isChecked(formData[id])}
+          onChange={handleChange}
+        />
+        {checkboxLabels[id]}
+      </label>
+    ))}
+
+  </div>
+
+</div>
+
+    
 
       {/* ========================= */}
       {/* CASE MANAGEMENT */}

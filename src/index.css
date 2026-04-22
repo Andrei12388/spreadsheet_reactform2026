@@ -143,6 +143,30 @@ table input[type="checkbox"] {
 }
 
 /* =========================
+   3 COLUMN LAYOUT (BDM / CASE / EXIT)
+========================= */
+.top-sections {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Make each block look like a card */
+.section-card {
+  background: white;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Responsive: stack on mobile */
+@media (max-width: 900px) {
+  .top-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
    RESPONSIVE
 ========================= */
 @media (max-width: 768px) {
