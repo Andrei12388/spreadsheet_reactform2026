@@ -243,6 +243,70 @@ function isVisible(field) {
   }
 
   // =========================
+// PROGRESS CALCULATION
+// =========================
+
+function calculateProgress() {
+
+  // ALL checkbox fields
+  const checkboxFields = [
+    "Q","S","U","W","Z","AB",
+    "AH","AI","AJ","AL","AN","AO","AP","AQ","AR",
+    "AT","AV","AY","BB","BC","BD","BE",
+    "BG","BH","BI","BJ",
+
+    // City Link Table
+    "BM","BN","BO",
+    "BP","BQ","BR",
+    "BS","BT","BU",
+    "BV","BW","BX",
+    "BY","BZ","CA",
+    "CB","CC","CD",
+    "CE","CF","CG"
+  ];
+
+  // ALL text inputs
+  const textFields = [
+    "R","T","V","X","Y","AA",
+    "AK","AM","AU","AW","AX","AZ","BA",
+    "AS",
+    "AC","AD","AE","AF","AG"
+  ];
+
+  let filled = 0;
+  let total = 0;
+
+  // Count checkboxes
+  checkboxFields.forEach(id => {
+    total++;
+    if (isChecked(formData[id])) filled++;
+  });
+
+  // Count text inputs
+  textFields.forEach(id => {
+
+    // only count visible fields
+    if (isVisible(id)) {
+
+      total++;
+
+      if (formData[id] && formData[id].toString().trim() !== "") {
+        filled++;
+      }
+
+    }
+
+  });
+
+  const percent =
+    total === 0 ? 0 : Math.round((filled / total) * 100);
+
+  return percent;
+}
+
+const progress = calculateProgress();
+
+  // =========================
   // RENDER
   // =========================
   return (
@@ -259,9 +323,11 @@ function isVisible(field) {
         background: "lightblue"
       }}
     >
-      {/* CONTROLS */}
+
+      {/* CONTROLS 
       <button onClick={zoomIn}>➕ Zoom</button>
       <button onClick={zoomOut}>➖ Zoom</button>
+      */}
 
       <h3>Check Form City Link</h3>
 
@@ -276,15 +342,47 @@ function isVisible(field) {
 
       <span>{message}</span>
 
+      {/* ========================= */}
+{/* PROGRESS BAR */}
+{/* ========================= */}
+
+<div style={{
+  background: "#e5e7eb",
+  borderRadius: 10,
+  overflow: "hidden",
+  marginTop: 10,
+  height: 22
+}}>
+
+  <div style={{
+    width: `${progress}%`,
+    background: progress === 100
+      ? "#16a34a"
+      : "#2563eb",
+    height: "100%",
+    transition: "width 0.3s ease"
+  }} />
+
+</div>
+
+<div style={{
+  fontWeight: "bold",
+  marginTop: 4
+}}>
+  Form Completion: {progress}%
+</div>
+
       {/* SCAN RESULT */}
       {scanResult && (
         <div style={{ background: "#e6f0ff", padding: 10, marginTop: 10 }}>
           <div>ID: {scanResult.id}</div>
           <div>Name: {scanResult.fullname}</div>
-          <div>Folders: {scanResult.folders}%</div>
+          <div>Case Folders: {scanResult.folders}%</div>
           <div>Pugay: {scanResult.pugay}%</div>
         </div>
       )}
+
+      <br></br>
 
      <div className="top-sections">
 
