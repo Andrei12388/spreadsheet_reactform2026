@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbwkxaVGrRBLN1lEi6VB1giE_3vytql_qk-C_4b9703mWkVWU11z_mpOXycPMxe4xanVvw/exec";
+  "https://script.google.com/macros/s/AKfycbw27WsSfSa1I61vxeScMoejyWLm6CY2QaoFImfjylGyHDgHEwEOaXUujDGWgTSdtzHG/exec";
 
 export default function App() {
   const [formData, setFormData] = useState({});
@@ -83,6 +83,7 @@ const textLabels = {
   AX: "PINALAKAS DATE",
   AZ: "PTEMS LINK",
   BA: "PTEMS DATE",
+  BF: "HOUSEHOLD FOLDER LINK",
 
   AS: "Specific Needs",
 
@@ -268,7 +269,7 @@ function calculateProgress() {
   // ALL text inputs
   const textFields = [
     "R","T","V","X","Y","AA",
-    "AK","AM","AU","AW","AX","AZ","BA",
+    "AK","AM","AU","AW","AX","AZ","BA", "BF",
     "AS",
     "AC","AD","AE","AF","AG"
   ];
@@ -329,7 +330,7 @@ const progress = calculateProgress();
       <button onClick={zoomOut}>➖ Zoom</button>
       */}
 
-      <h3>Check Form City Link</h3>
+      <h3>DSWD CITY LINK FILL UP FORM 2026</h3>
 
       <input
         placeholder="Enter ID"
@@ -589,6 +590,16 @@ const progress = calculateProgress();
         placeholder="Specific Needs"
         id="AS"
         value={formData.AS || ""}
+        onChange={handleChange}
+      />
+      </label>
+       <br></br>
+       <label>
+   {textLabels["BF"]}
+      <input
+        placeholder="BF"
+        id="BF"
+        value={formData.BF || ""}
         onChange={handleChange}
       />
       </label>
