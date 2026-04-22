@@ -329,9 +329,30 @@ const progress = calculateProgress();
       <button onClick={zoomIn}>➕ Zoom</button>
       <button onClick={zoomOut}>➖ Zoom</button>
       */}
+      <div style={{
+        display: "flex",
+        justifyItems: "center",
+        alignItems: "center",
+        flexDirection: "column"
+      }}>
+<img src="/logo.png" width={260} height={80} style={{
+  display: "block",
+ 
+}}></img>
+      <h3 style={{
+ textAlign: "center",
+ marginBottom: 30,
 
-      <h3>DSWD CITY LINK FILL UP FORM 2026</h3>
-
+}}>CASELOAD ANALYSIS, MONITORING, OPERATION REVIEW (CLAMOR)</h3>
+</div>
+      <div style={{
+      
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        justifyItems: "center",
+        alignContent: "center"
+      }}>
       <input
         placeholder="Enter ID"
         id="entryIdInput"
@@ -342,6 +363,8 @@ const progress = calculateProgress();
       <button onClick={clearForm}>Clear</button>
 
       <span>{message}</span>
+      </div>
+      
 
       {/* ========================= */}
 {/* PROGRESS BAR */}
@@ -378,7 +401,7 @@ const progress = calculateProgress();
         <div style={{ background: "#e6f0ff", padding: 10, marginTop: 10 }}>
           <div>ID: {scanResult.id}</div>
           <div>Name: {scanResult.fullname}</div>
-          <div>Case Folders: {scanResult.folders}%</div>
+          <div>Case Folder: {scanResult.folders}%</div>
           <div>Pugay: {scanResult.pugay}%</div>
         </div>
       )}
@@ -404,6 +427,7 @@ const progress = calculateProgress();
         {checkboxLabels[id]}
       </label>
     ))}
+
 <br></br>
     {/* text inputs stay here */}
     {isVisible("R") && (
@@ -608,10 +632,39 @@ const progress = calculateProgress();
 
 
   {/* ========================= */}
-  {/* EXIT */}
+  {/* CASE MANAGEMENT */}
   {/* ========================= */}
-  <div className="section-card">
-    <h3>EXIT / GRADUATION</h3>
+  <div className="section-card" style={{
+    display: "flex",
+    flexDirection: "column"
+  }}>
+      <h3>CASE MANAGEMENT</h3>
+
+      {["AC", "AD", "AE", "AF", "AG"].map(id => (
+         <label>
+       {textLabels[id]}
+        <input
+          key={id}
+         
+          id={id}
+          value={formData[id] || ""}
+          onChange={handleChange}
+          style={{ display: "block", marginBottom: 5 }}
+        />
+        </label>
+      ))}
+      
+  </div>
+
+   {/* ========================= */}
+  {/* EXIT GRAD */}
+  {/* ========================= */}
+  <div className="section-card" style={{
+    display: "flex",
+    flexDirection: "column"
+  }}>
+ 
+   <h3>EXIT / GRADUATION</h3>
 
     {["BG", "BH", "BI", "BJ"].map(id => (
       <label key={id}>
@@ -624,31 +677,14 @@ const progress = calculateProgress();
         {checkboxLabels[id]}
       </label>
     ))}
-
-  </div>
+    </div>
 
 </div>
 
     
 
       {/* ========================= */}
-      {/* CASE MANAGEMENT */}
-      {/* ========================= */}
-      <h3>CASE MANAGEMENT</h3>
-
-      {["AC", "AD", "AE", "AF", "AG"].map(id => (
-         <label>
-       {textLabels[id]}
-        <input
-          key={id}
-          placeholder={id}
-          id={id}
-          value={formData[id] || ""}
-          onChange={handleChange}
-          style={{ display: "block", marginBottom: 5 }}
-        />
-        </label>
-      ))}
+     
 
       {/* ========================= */}
       {/* TABLE */}
