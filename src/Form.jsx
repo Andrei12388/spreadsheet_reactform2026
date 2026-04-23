@@ -63,7 +63,6 @@ if (location.state?.district) {
     AT: ["AU"],
     AV: ["AW", "AX"],
     AY: ["AZ", "BA"],
-    BD: ["BE"],
     BG: ["BH"]
   };
 
