@@ -222,6 +222,7 @@ function isVisible(field) {
       if (result.status !== "FOUND") {
         setMessage("❌ Not Found");
         setScanResult(null);
+        setLoading(false);
         return;
       }
 
