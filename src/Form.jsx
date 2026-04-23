@@ -308,6 +308,44 @@ function calculateProgress() {
 
 const progress = calculateProgress();
 
+const missingFields = getMissingFields();
+
+const isSubmitDisabled = missingFields.length > 0;
+
+function getMissingFields() {
+
+  const missing = [];
+
+  for (const [checkboxId, targets] of Object.entries(checkboxMap)) {
+
+    const checked = isChecked(formData[checkboxId]);
+
+    if (checked) {
+
+      targets.forEach(textId => {
+
+        if (isVisible(textId)) {
+
+          const value = formData[textId];
+
+          if (!value || value.toString().trim() === "") {
+
+            missing.push(textLabels[textId] || textId);
+
+          }
+
+        }
+
+      });
+
+    }
+
+  }
+
+  return missing;
+
+}
+
 
   // RENDER
 
@@ -359,6 +397,7 @@ const progress = calculateProgress();
         id="entryIdInput"
         value={formData.entryIdInput || ""}
         onChange={handleChange}
+        
       />
       <button onClick={goToId}>Search ID</button>
       <button onClick={clearForm}>Clear</button>
@@ -447,7 +486,9 @@ const progress = calculateProgress();
             id={textId}
             value={formData[textId] || ""}
             onChange={handleChange}
-            style={{ display: "block", width: "100%" }}
+            style={{ display: "block", width: "100%", border: missingFields.includes(textLabels[textId])
+    ? "2px solid red"
+    : "1px solid #ccc" }}
           />
 
         </label>
@@ -507,7 +548,10 @@ const progress = calculateProgress();
               onChange={handleChange}
               style={{
                 display: "block",
-                width: "100%"
+                width: "100%",
+                border: missingFields.includes(textLabels[textId])
+    ? "2px solid red"
+    : "1px solid #ccc"
               }}
             />
 
@@ -659,7 +703,35 @@ const progress = calculateProgress();
       </div>
 
       {/* SUBMIT */}
-      <button onClick={submitForm}>Submit</button>
+      <button
+  onClick={submitForm}
+  disabled={isSubmitDisabled}
+  style={{
+    background: isSubmitDisabled ? "#9ca3af" : "#16a34a",
+    color: "white",
+    cursor: isSubmitDisabled ? "not-allowed" : "pointer",
+    padding: "8px 16px",
+    borderRadius: 6,
+    border: "none",
+    marginTop: 10
+  }}
+>
+  Submit
+</button>
+
+{isSubmitDisabled && (
+
+  <span style={{
+    color: "red",
+    marginLeft: 10,
+    fontWeight: "bold"
+  }}>
+
+    Missing: {missingFields.join(", ")}
+
+  </span>
+
+)}
        <span>{message}</span>
 
       {loading && (
