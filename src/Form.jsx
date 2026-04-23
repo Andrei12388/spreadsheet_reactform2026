@@ -1,14 +1,53 @@
 import { useState } from "react";
-
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbw27WsSfSa1I61vxeScMoejyWLm6CY2QaoFImfjylGyHDgHEwEOaXUujDGWgTSdtzHG/exec";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 
 export default function Form() {
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+// Get API from navigation OR storage
+const API_URL =
+  location.state?.API_URL ||
+  sessionStorage.getItem("API_URL") ||
+  "";
+
+// Save API if coming from menu
+if (location.state?.API_URL) {
+  sessionStorage.setItem(
+    "API_URL",
+    location.state.API_URL
+  );
+}
+
+const district =
+  location.state?.district ||
+  sessionStorage.getItem("district") ||
+  "";
+
+if (location.state?.district) {
+  sessionStorage.setItem(
+    "district",
+    location.state.district
+  );
+}
+
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [scanResult, setScanResult] = useState(null);
   const [zoom, setZoom] = useState(1);
+
+  if (!API_URL) {
+  return (
+    <div style={{ padding: 20 }}>
+      ❌ No district selected.<br />
+      Please return to Menu.
+    </div>
+  );
+}
+
 
 
   // CHECKBOX RULES (must match GAS)
@@ -368,22 +407,34 @@ function getMissingFields() {
       <button onClick={zoomIn}>➕ Zoom</button>
       <button onClick={zoomOut}>➖ Zoom</button>
       */}
+      <button onClick={() =>
+    navigate("/")
+  } style={{
+        backgroundColor: "orange",
+        textAlign: "center",
+       
+      }}>← Back to Menu</button>
       <div style={{
         display: "flex",
         justifyItems: "center",
         alignItems: "center",
         flexDirection: "column"
       }}>
+        
 <img src="/logo.png" width={260} height={80} style={{
   display: "block",
  
 }}></img>
       <h3 style={{
  textAlign: "center",
- marginBottom: 30,
+ marginBottom: 5,
 
 }}>CASELOAD ANALYSIS, MONITORING, OPERATION REVIEW (CLAMOR)</h3>
+<h3 style={{
+  color: "red",
+}}>{district}</h3>
 </div>
+
       <div style={{
       
         display: "flex",

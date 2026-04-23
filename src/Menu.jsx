@@ -1,7 +1,11 @@
 import { useNavigate } from "react-router-dom"
 
 function Menu() {
-  const navigate = useNavigate()
+  const API_URL_DISTRICT3 =
+    "https://script.google.com/macros/s/AKfycbw27WsSfSa1I61vxeScMoejyWLm6CY2QaoFImfjylGyHDgHEwEOaXUujDGWgTSdtzHG/exec";
+  
+  const API_URL_HOLYSPIRIT = "https://script.google.com/macros/s/AKfycbwmfBWJ44qYo3iAuw73TqQT02USgsytuNJ3VrIi1ddoY0xfgcy35UU9ICaXV4Nc14k40A/exec";
+  const navigate = useNavigate();
 
   return (
     <div
@@ -39,33 +43,81 @@ function Menu() {
           gap: 10,
         }}>
 
-        <button style={{
-          width: 130,
-          height: 50,
-        }} onClick={() => navigate("/form")}>
-          DIST. II MILING
-        </button>
-        <button style={{
-          backgroundColor: "red",
-           width: 130,
-          height: 50,
-        }} onClick={() => navigate("/form")}>
-          DIST. II H.SPIRIT
-        </button>
-        <button style={{
-          backgroundColor: "green",
-           width: 130,
-          height: 50,
-        }} onClick={() => navigate("/form")}>
-          DISTRICT III
-        </button>
-        <button style={{
-          backgroundColor: "orange",
-           width: 130,
-          height: 50,
-        }} onClick={() => navigate("/form")}>
-          DISTRICT IV
-        </button>
+       <button
+  style={{
+    width: 130,
+    height: 50,
+  }}
+  onClick={() =>
+    navigate("/form", {
+      state: {
+        API_URL:
+          "https://script.google.com/macros/s/AKfycbw_miling_url/exec",
+          district: "DIST. II MILING"
+      }
+    })
+  }
+>
+  DIST. II MILING
+</button>
+
+
+<button
+  style={{
+    backgroundColor: "red",
+    width: 130,
+    height: 50,
+  }}
+  onClick={() =>
+    navigate("/form", {
+      state: {
+        API_URL: API_URL_HOLYSPIRIT,
+        district: " DIST. II H.SPIRIT"
+      }
+    })
+  }
+>
+  DIST. II H.SPIRIT
+</button>
+
+
+<button
+  style={{
+    backgroundColor: "green",
+    width: 130,
+    height: 50,
+  }}
+  onClick={() =>
+    navigate("/form", {
+      state: {
+        API_URL: API_URL_DISTRICT3,
+        district: "DISTRICT III"
+      }
+    })
+  }
+>
+  DISTRICT III
+</button>
+
+
+<button
+  style={{
+    backgroundColor: "orange",
+    width: 130,
+    height: 50,
+  }}
+  onClick={() =>
+    navigate("/form", {
+      state: {
+        API_URL:
+          "https://script.google.com/macros/s/AKfycbw_district4_url/exec",
+          district: "DISTRICT IV"
+      }
+    })
+  }
+>
+  DISTRICT IV
+</button>
         </div>
       </div>
     </div>
