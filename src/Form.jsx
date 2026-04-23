@@ -784,18 +784,48 @@ function getMissingFields() {
 )}
        <span>{message}</span>
 
-      {loading && (
-        <div style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(255,255,255,0.7)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          Loading...
-        </div>
-      )}
+     {loading && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(255,255,255,0.7)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+      zIndex: 9999
+    }}
+  >
+    <div className="spinner" />
+    <h3>Loading...</h3>
+  </div>
+)}
+
+{loading && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "4px",
+      background: "#3498db",
+      animation: "loadingBar 1s linear infinite",
+      zIndex: 9999
+    }}
+  >
+    <style>
+      {`
+        @keyframes loadingBar {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}
+    </style>
+  </div>
+)}
+
     </div>
   );
 }

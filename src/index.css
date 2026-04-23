@@ -159,6 +159,21 @@ table input[type="checkbox"] {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #ddd;
+  border-top: 6px solid #3498db; /* spinner color */
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Responsive: stack on mobile */
 @media (max-width: 900px) {
   .top-sections {
