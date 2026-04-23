@@ -10,9 +10,9 @@ export default function Form() {
   const [scanResult, setScanResult] = useState(null);
   const [zoom, setZoom] = useState(1);
 
-  // =========================
+
   // CHECKBOX RULES (must match GAS)
-  // =========================
+
   const checkboxMap = {
     Q: ["R"],
     S: ["T"],
@@ -28,9 +28,9 @@ export default function Form() {
     BG: ["BH"]
   };
 
-  // =========================
+
 // LABEL MAPS (from old HTML)
-// =========================
+
 
 const checkboxLabels = {
   // BDM
@@ -96,9 +96,9 @@ const textLabels = {
 };
 
 
-  // =========================
+
   // INPUT HANDLER
-  // =========================
+
   function handleChange(e) {
     const { id, type, checked, value } = e.target;
 
@@ -108,16 +108,16 @@ const textLabels = {
     }));
   }
 
-  // =========================
+
   // SAFE CHECKBOX CHECKER
-  // =========================
+
   function isChecked(value) {
     return value === true || value === "TRUE" || value === 1 || value === "1";
   }
 
-  // =========================
+
   // FIELD VISIBILITY
-  // =========================
+
 function isVisible(field) {
   for (const [chk, targets] of Object.entries(checkboxMap)) {
     if (targets.includes(field)) {
@@ -128,9 +128,9 @@ function isVisible(field) {
   return true;
 }
 
-  // =========================
+
   // UI CONTROLS
-  // =========================
+
   function zoomIn() {
     setZoom(z => z + 0.1);
   }
@@ -146,9 +146,9 @@ function isVisible(field) {
   }
   
 
-  // =========================
+
   // SUBMIT (FIXED FOR GAS)
-  // =========================
+
  async function submitForm() {
   setLoading(true);
 
@@ -176,9 +176,9 @@ function isVisible(field) {
 
     setMessage("✅ Submitted!");
 
-    // =========================
+  
     // AUTO-REFETCH AFTER SAVE
-    // =========================
+  
     const id = formData.entryIdInput;
 
     if (id) {
@@ -206,9 +206,9 @@ function isVisible(field) {
   setLoading(false);
 }
 
-  // =========================
+
   // SCAN (FIXED RESPONSE HANDLING)
-  // =========================
+
   async function goToId() {
     const id = formData.entryIdInput;
     if (!id) return setMessage("❗ Enter ID");
@@ -244,7 +244,7 @@ function isVisible(field) {
     setLoading(false);
   }
 
-  // =========================
+
 // PROGRESS CALCULATION
 // =========================
 
@@ -308,9 +308,9 @@ function calculateProgress() {
 
 const progress = calculateProgress();
 
-  // =========================
+
   // RENDER
-  // =========================
+
   return (
     <div
       style={{
@@ -367,9 +367,8 @@ const progress = calculateProgress();
       </div>
       
 
-      {/* ========================= */}
 {/* PROGRESS BAR */}
-{/* ========================= */}
+
 
 <div style={{
   background: "#e5e7eb",
@@ -411,109 +410,72 @@ const progress = calculateProgress();
 
      <div className="top-sections">
 
-  {/* ========================= */}
+  
   {/* BDM */}
-  {/* ========================= */}
+  
   <div className="section-card">
     <h3>BENEFICIARY DATA MANAGEMENT (BDM)</h3>
 
     {["Q", "S", "U", "W", "Z", "AB"].map(id => (
-      <label key={id} style={{ display: "block" }}>
-        <input
-          type="checkbox"
-          id={id}
-          checked={isChecked(formData[id])}
-          onChange={handleChange}
-        />
-        {checkboxLabels[id]}
-      </label>
+  <div key={id} style={{ marginBottom: 10 }}>
+
+    {/* CHECKBOX */}
+    <label style={{ display: "block" }}>
+      <input
+        type="checkbox"
+        id={id}
+        checked={isChecked(formData[id])}
+        onChange={handleChange}
+      />
+      {checkboxLabels[id]}
+    </label>
+
+    {/* RELATED TEXT INPUTS */}
+    {checkboxMap[id]?.map(textId => (
+      isVisible(textId) && (
+        <label
+          key={textId}
+          style={{
+            display: "block",
+            marginLeft: 20,
+            marginTop: 4
+          }}
+        >
+          {textLabels[textId]}
+
+          <input
+            id={textId}
+            value={formData[textId] || ""}
+            onChange={handleChange}
+            style={{ display: "block", width: "100%" }}
+          />
+
+        </label>
+      )
     ))}
 
-<br></br>
-    {/* text inputs stay here */}
-    {isVisible("R") && (
-        <label>
-  {textLabels["R"]}
-  <input
-    id="R"
-    placeholder="R"
-    value={formData.R || ""}
-    onChange={handleChange}
-  />
-</label>
-      )}
-   <br></br>
-      {isVisible("T") && (
-         <label>
-  {textLabels["T"]}
-        <input
-          placeholder="T"
-          id="T"
-          value={formData.T || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-<br></br>
-      {isVisible("V") && (
-         <label>
-  {textLabels["V"]}
-        <input
-          placeholder="V"
-          id="V"
-          value={formData.V || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-<br></br>
-      {isVisible("X") && (
-         <label>
-  {textLabels["X"]}
-        <input
-          placeholder="X"
-          id="X"
-          value={formData.X || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-<br></br>
-       {isVisible("Y") && (
-         <label>
-  {textLabels["Y"]}
-        <input
-          placeholder="Y"
-          id="Y"
-          value={formData.Y || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-<br></br>
-       {isVisible("AA") && (
-         <label>
-  {textLabels["AA"]}
-        <input
-          placeholder="AA"
-          id="AA"
-          value={formData.AA || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
+  </div>
+))}
 
   </div>
 
 
-  {/* ========================= */}
+  
   {/* CASE FOLDER */}
-  {/* ========================= */}
-  <div className="section-card">
-    <h3>CASE FOLDER</h3>
 
-    {["AH", "AI", "AJ", "AL", "AN", "AO", "AP", "AQ", "AR", "AT", "AV", "AY", "BB", "BC", "BD", "BE"].map(id => (
-      <label key={id} style={{ display: "block" }}>
+<div className="section-card">
+  <h3>CASE FOLDER</h3>
+
+  {[
+    "AH","AI","AJ","AL","AN","AO","AP",
+    "AQ","AR","AT","AV","AY",
+    "BB","BC","BD","BE"
+  ].map(id => (
+
+    <div key={id} style={{ marginBottom: 10 }}>
+
+      {/* CHECKBOX */}
+      <label style={{ display: "block" }}>
         <input
           type="checkbox"
           id={id}
@@ -522,119 +484,73 @@ const progress = calculateProgress();
         />
         {checkboxLabels[id]}
       </label>
-    ))}
-<br></br>
-     {isVisible("AK") && (
-         <label>
-  {textLabels["AK"]}
-        <input
-          placeholder="AK"
-          id="AK"
-          value={formData.AK || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-<br></br>
-      {isVisible("AM") && (
-         <label>
-  {textLabels["AM"]}
-        <input
-          placeholder="AM"
-          id="AM"
-          value={formData.AM || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-<br></br>
-      {isVisible("AU") && (
-         <label>
-  {textLabels["AU"]}
-        <input
-          placeholder="AU"
-          id="AU"
-          value={formData.AU || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-<br></br>
-      {isVisible("AW") && (
-         <label>
-  {textLabels["AW"]}
-        <input
-          placeholder="AW"
-          id="AW"
-          value={formData.AW || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-<br></br>
-      {isVisible("AX") && (
-         <label>
-  {textLabels["AX"]}
-        <input
-          placeholder="AX"
-          id="AX"
-          value={formData.AX || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-<br></br>
-      {isVisible("AZ") && (
-         <label>
-  {textLabels["AZ"]}
-        <input
-          placeholder="AZ"
-          id="AZ"
-          value={formData.AZ || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-      
-<br></br>
-      {isVisible("BA") && (
-         <label>
-  {textLabels["BA"]}
-        <input
-          placeholder="BA"
-          id="BA"
-          value={formData.BA || ""}
-          onChange={handleChange}
-        />
-        </label>
-      )}
-      <br></br>
-       <label>
-   {textLabels["AS"]}
-      <input
-        placeholder="Specific Needs"
-        id="AS"
-        value={formData.AS || ""}
-        onChange={handleChange}
-      />
-      </label>
-       <br></br>
-       <label>
-   {textLabels["BF"]}
-      <input
-        placeholder="BF"
-        id="BF"
-        value={formData.BF || ""}
-        onChange={handleChange}
-      />
-      </label>
 
-  </div>
+      {/* RELATED TEXT INPUTS */}
+      {checkboxMap[id]?.map(textId => (
+
+        isVisible(textId) && (
+
+          <label
+            key={textId}
+            style={{
+              display: "block",
+              marginLeft: 20,
+              marginTop: 4
+            }}
+          >
+
+            {textLabels[textId]}
+
+            <input
+              id={textId}
+              value={formData[textId] || ""}
+              onChange={handleChange}
+              style={{
+                display: "block",
+                width: "100%"
+              }}
+            />
+
+          </label>
+
+        )
+
+      ))}
+
+    </div>
+
+  ))}
+
+  {/* NON-CHECKBOX TEXT FIELDS */}
+
+  <br />
+
+  <label>
+    {textLabels["AS"]}
+    <input
+      id="AS"
+      value={formData.AS || ""}
+      onChange={handleChange}
+    />
+  </label>
+
+  <br />
+
+  <label>
+    {textLabels["BF"]}
+    <input
+      id="BF"
+      value={formData.BF || ""}
+      onChange={handleChange}
+    />
+  </label>
+
+</div>
 
 
-  {/* ========================= */}
+  
   {/* CASE MANAGEMENT */}
-  {/* ========================= */}
+  
   <div className="section-card" style={{
     display: "flex",
     flexDirection: "column"
@@ -657,9 +573,9 @@ const progress = calculateProgress();
       
   </div>
 
-   {/* ========================= */}
+   
   {/* EXIT GRAD */}
-  {/* ========================= */}
+  
   <div className="section-card" style={{
     display: "flex",
     flexDirection: "column"
@@ -684,12 +600,12 @@ const progress = calculateProgress();
 
     
 
-      {/* ========================= */}
+      
      
 
-      {/* ========================= */}
+      
       {/* TABLE */}
-      {/* ========================= */}
+      
       <div style={{
         display: "flex",
         flexDirection: "column",
