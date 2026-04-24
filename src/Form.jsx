@@ -146,7 +146,6 @@ const textLabels = {
     }));
   }
 
-
   // SAFE CHECKBOX CHECKER
 
   function isChecked(value) {
@@ -612,7 +611,6 @@ function getMissingFields() {
       ))}
 
     </div>
-
   ))}
 
   {/* NON-CHECKBOX TEXT FIELDS */}
@@ -691,11 +689,6 @@ function getMissingFields() {
     </div>
 
 </div>
-
-    
-
-      
-     
 
       
       {/* TABLE */}
