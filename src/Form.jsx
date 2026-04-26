@@ -60,9 +60,11 @@ if (location.state?.district) {
     Z: ["AA"],
     AJ: ["AK"],
     AL: ["AM"],
+    AR: ["AS"],
     AT: ["AU"],
     AV: ["AW", "AX"],
     AY: ["AZ", "BA"],
+    BE: ["BF"],
     BG: ["BH"]
   };
 
@@ -83,19 +85,19 @@ const checkboxLabels = {
   AH: "GIS",
   AI: "FRVA",
   AJ: "SCSR",
-  AL: "HIP",
-  AN: "HIP.1 HEALTH",
-  AO: "HIP.2 EDUC",
-  AP: "HIP.3 EMPLOYMENT",
-  AQ: "HIP.4 LIVELIHOOD",
-  AR: "HIP: OTHERS",
+  AL: "FIP",
+  AN: "FIP.1 HEALTH",
+  AO: "FIP.2 EDUC",
+  AP: "FIP.3 EMPLOYMENT",
+  AQ: "FIP.4 LIVELIHOOD",
+  AR: "FIP: OTHERS",
   AT: "TALAAN NG PAGBABAGO",
   AV: "PINALAKAS FDS PACKAGE",
   AY: "PTEMS",
   BB: "TALAARAWAN",
   BC: "EDUC REC",
   BD: "IDS",
-  BE: "FAM REC",
+  BE: "FAMILY REC",
 
   // EXIT
   BG: "TAF",
@@ -115,7 +117,7 @@ const textLabels = {
 
   // CASE FOLDER
   AK: "SCSR LINK",
-  AM: "HIP LINK",
+  AM: "FIP LINK",
   AU: "TALAAN DATE",
   AW: "PINALAKAS FDS PACKAGE LINK",
   AX: "PINALAKAS DATE",
@@ -129,8 +131,8 @@ const textLabels = {
   AC: "SWDI LOWB 2025",
   AD: "SWDI SCORE",
   AE: "NATURAL ATTRITION",
-  AF: "MANDATORY EXIT",
-  AG: "TARGET FOR PUGAY SA TAGUMPAY MAY 2026"
+  AF: "CANDIDACY STATUS",
+  AG: "TARGET FOR PUGAY SA TAGUMPAY"
 };
 
 
@@ -138,13 +140,34 @@ const textLabels = {
   // INPUT HANDLER
 
   function handleChange(e) {
-    const { id, type, checked, value } = e.target;
 
-    setFormData(prev => ({
+  const { id, type, checked, value } = e.target;
+
+  setFormData(prev => {
+
+    let updated = {
       ...prev,
       [id]: type === "checkbox" ? checked : value
-    }));
-  }
+    };
+
+    // If checkbox unchecked — clear linked fields
+    if (type === "checkbox" && !checked) {
+
+      const targets = checkboxMap[id];
+
+      if (targets) {
+        targets.forEach(t => {
+          updated[t] = ""; // force clear
+        });
+      }
+
+    }
+
+    return updated;
+
+  });
+
+}
 
   // SAFE CHECKBOX CHECKER
 
@@ -615,27 +638,6 @@ function getMissingFields() {
 
   {/* NON-CHECKBOX TEXT FIELDS */}
 
-  <br />
-
-  <label>
-    {textLabels["AS"]}
-    <input
-      id="AS"
-      value={formData.AS || ""}
-      onChange={handleChange}
-    />
-  </label>
-
-  <br />
-
-  <label>
-    {textLabels["BF"]}
-    <input
-      id="BF"
-      value={formData.BF || ""}
-      onChange={handleChange}
-    />
-  </label>
 
 </div>
 
