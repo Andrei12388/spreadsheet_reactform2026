@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Menu() {
@@ -8,12 +9,64 @@ function Menu() {
     "https://script.google.com/macros/s/AKfycbyjHGpyAaeBVmV1Kd9AUJX4WULiqaDY05HWph6e97zFGyn64gqqkd7ra77IUX2w-BXW/exec";
 
   const API_URL_DISTRICT3 =
-    "https://script.google.com/macros/s/AKfycbw27WsSfSa1I61vxeScMoejyWLm6CY2QaoFImfjylGyHDgHEwEOaXUujDGWgTSdtzHG/exec";
+    "https://script.google.com/macros/s/AKfycbx7F6orQ9zDvg-314xaXPQrOYzYqXgj2w_UK7NaJ6Dje2jff-TUg8sb9uRX__pOovT5MA/exec";
 
   const API_URL_HOLYSPIRIT =
     "https://script.google.com/macros/s/AKfycbwmfBWJ44qYo3iAuw73TqQT02USgsytuNJ3VrIi1ddoY0xfgcy35UU9ICaXV4Nc14k40A/exec";
 
   const navigate = useNavigate();
+
+  // =========================
+  // BUTTON STATES
+  // =========================
+  const [disabledButtons, setDisabledButtons] = useState({
+    AS: false,
+    AT: false,
+    AU: false,
+    AV: false,
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  // =========================
+  // LOAD SETTINGS
+  // =========================
+  async function loadSettings() {
+    try {
+      const res = await fetch(
+        API_URL_DISTRICT3 + "?settings=true"
+      );
+
+      const data = await res.json();
+
+      if (data.status === "success") {
+        setDisabledButtons(data.data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <h2>Loading...</h2>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -50,7 +103,8 @@ function Menu() {
 
         {/* Title */}
         <h2>
-          CASELOAD ANALYSIS, MONITORING, OPERATION REVIEW (CLAMOR)
+          CASELOAD ANALYSIS, MONITORING,
+          OPERATION REVIEW (CLAMOR)
         </h2>
 
         {/* Arrow + Text */}
@@ -73,81 +127,174 @@ function Menu() {
           style={{
             display: "flex",
             justifyContent: "center",
-            flexWrap: "wrap", // allows wrapping on small screens
+            flexWrap: "wrap",
             gap: 10,
             width: "100%",
           }}
         >
-          <button
-            style={{
-              width: 130,
-              height: 50,
-            }}
-            onClick={() =>
-              navigate("/form", {
-                state: {
-                  API_URL: API_URL_MILING,
-                  district: "DIST. II MILING",
-                },
-              })
-            }
-          >
-            DIST. II MILING
-          </button>
+       
+        {/* DISTRICT II MILING */}
+<div style={{ position: "relative" }}>
+  {disabledButtons.AS && (
+    <label
+      style={{
+        color: "gray",
+        fontSize: 12,
+        position: "absolute",
+        top: 60,
+        left: 0,
+      }}
+    >
+      (Under Maintenance)
+    </label>
+  )}
 
-          <button
-            style={{
-              backgroundColor: "red",
-              width: 130,
-              height: 50,
-            }}
-            onClick={() =>
-              navigate("/form", {
-                state: {
-                  API_URL: API_URL_HOLYSPIRIT,
-                  district: "DIST. II H.SPIRIT",
-                },
-              })
-            }
-          >
-            DIST. II H.SPIRIT
-          </button>
+  <button
+    disabled={disabledButtons.AS}
+    style={{
+      width: 130,
+      height: 50,
+      cursor: disabledButtons.AS ? "not-allowed" : "pointer",
+    }}
+    onClick={() => {
+      const isDisabled = !!disabledButtons.AS;
 
-          <button
-            style={{
-              backgroundColor: "green",
-              width: 130,
-              height: 50,
-            }}
-            onClick={() =>
-              navigate("/form", {
-                state: {
-                  API_URL: API_URL_DISTRICT3,
-                  district: "DISTRICT III",
-                },
-              })
-            }
-          >
-            DISTRICT III
-          </button>
+      // 🔥 persist immediately (IMPORTANT FIX)
+      sessionStorage.setItem("isDisabled", isDisabled);
+      sessionStorage.setItem("district", "DIST. II MILING");
+      sessionStorage.setItem("API_URL", API_URL_MILING);
 
-          <button
-            style={{
-              backgroundColor: "orange",
-              width: 130,
-              height: 50,
-            }}
-            onClick={() =>
-              navigate("/form", {
-                state: {
-                  API_URL: API_URL_DISTRICT4,
-                  district: "DISTRICT IV",
-                },
-              })
-            }
-          >
-            DISTRICT IV
-          </button>
+      navigate("/form", {
+        state: {
+          API_URL: API_URL_MILING,
+          district: "DIST. II MILING",
+          isDisabled,
+        },
+      });
+    }}
+  >
+    DIST. II MILING
+  </button>
+</div>
+
+          {/* HOLY SPIRIT */}
+          <div style={{ position: "relative" }}>
+  {disabledButtons.AT && (
+    <label
+      style={{
+        color: "gray",
+        fontSize: 12,
+        position: "absolute",
+        top: 60,
+        left: 0,
+      }}
+    >
+      (Under Maintenance)
+    </label>
+  )}
+
+  <button
+    disabled={disabledButtons.AT}
+    style={{
+      backgroundColor: "red",
+      width: 130,
+      height: 50,
+      cursor: disabledButtons.AT
+        ? "not-allowed"
+        : "pointer",
+    }}
+    onClick={() =>
+      navigate("/form", {
+        state: {
+          API_URL: API_URL_HOLYSPIRIT,
+          district: "DIST. II H.SPIRIT",
+        },
+      })
+    }
+  >
+    DIST. II H.SPIRIT
+  </button>
+</div>
+
+          {/* DISTRICT III */}
+          <div style={{ position: "relative" }}>
+  {disabledButtons.AU && (
+    <label
+      style={{
+        color: "gray",
+        fontSize: 12,
+        position: "absolute",
+        top: 60,
+        left: 0,
+      }}
+    >
+      (Under Maintenance)
+    </label>
+  )}
+
+  <button
+    disabled={disabledButtons.AU}
+    style={{
+      backgroundColor: "green",
+      width: 130,
+      height: 50,
+      cursor: disabledButtons.AU
+        ? "not-allowed"
+        : "pointer",
+    }}
+    onClick={() =>
+      navigate("/form", {
+        state: {
+          API_URL: API_URL_DISTRICT3,
+          district: "DISTRICT III",
+          isDisabled: disabledButtons.AU,
+        },
+      })
+    }
+  >
+    DISTRICT III
+  </button>
+</div>
+
+          {/* DISTRICT IV */}
+          <div style={{ position: "relative" }}>
+  {disabledButtons.AV && (
+    <label
+      style={{
+        color: "gray",
+        fontSize: 12,
+        position: "absolute",
+        top: 60,
+        left: 0,
+      }}
+    >
+      (Under Maintenance)
+    </label>
+  )}
+
+  <button
+    disabled={disabledButtons.AV}
+    style={{
+      backgroundColor: "orange",
+      width: 130,
+      height: 50,
+      cursor: disabledButtons.AV
+        ? "not-allowed"
+        : "pointer",
+    }}
+    onClick={() =>
+      navigate("/form", {
+        state: {
+          API_URL: API_URL_DISTRICT4,
+          district: "DISTRICT IV",
+          isDisabled: disabledButtons.AV,
+        },
+      })
+    }
+  >
+    DISTRICT IV
+  </button>
+</div>
         </div>
       </div>
     </div>

@@ -7,6 +7,11 @@ export default function Form() {
   const location = useLocation();
   const navigate = useNavigate();
 
+
+const isDistrictDisabled =
+  location.state?.isDisabled ??
+  sessionStorage.getItem("isDisabled") === "true";
+
 // Get API from navigation OR storage
 const API_URL =
   location.state?.API_URL ||
@@ -20,6 +25,8 @@ if (location.state?.API_URL) {
     location.state.API_URL
   );
 }
+
+
 
 const district =
   location.state?.district ||
@@ -210,6 +217,10 @@ function isVisible(field) {
   // SUBMIT (FIXED FOR GAS)
 
  async function submitForm() {
+   if (isDistrictDisabled) {
+    setMessage("⛔ This form is disabled from Menu");
+    return;
+  }
   setLoading(true);
 
   try {
@@ -370,7 +381,8 @@ const progress = calculateProgress();
 
 const missingFields = getMissingFields();
 
-const isSubmitDisabled = missingFields.length > 0;
+const isSubmitDisabled =
+  isDistrictDisabled || missingFields.length > 0;
 
 function getMissingFields() {
 
@@ -423,6 +435,11 @@ function getMissingFields() {
         background: "lightblue"
       }}
     >
+      {isDistrictDisabled && (
+  <div style={{ color: "red", fontWeight: "bold" }}>
+    This district is currently disabled.
+  </div>
+)}
 
       {/* CONTROLS 
       <button onClick={zoomIn}>➕ Zoom</button>
