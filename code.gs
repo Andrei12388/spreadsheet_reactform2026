@@ -9,11 +9,18 @@ const CHECKBOX_MAP = {
   U: ["V"],
   W: ["X", "Y"],
   Z: ["AA"],
-  AJ: ["AK"],
-  AL: ["AM"],
-  AT: ["AU"],
-  AV: ["AW", "AX"],
-  AY: ["AZ", "BA"]
+  AB: ["AC"],
+
+  // CASE FOLDER
+  AM: ["AN"],
+  AO: ["AP"],
+  AU: ["AV"],
+  AW: ["AW"],
+  AX: ["AX"],
+  AY: ["AZ"],
+  BA: ["BB", "BC"],
+  BD: ["BE", "BF"],
+  BJ: ["BK"]
 };
 
 // =========================
@@ -36,6 +43,12 @@ function jsonResponse(obj) {
 // GET
 // =========================
 function doGet(e) {
+  if (e.parameter.settings === "true") {
+  return jsonResponse({
+    status: "success",
+    data: getButtonSettings()
+  });
+}
   try {
     const entryId = e.parameter.id;
 
@@ -100,6 +113,21 @@ function findRowById(entryId) {
 }
 
 // =========================
+// GET SETTINGS
+// =========================
+function getButtonSettings() {
+  const sheet = SpreadsheetApp.getActive()
+    .getSheetByName(CONFIG.DASHBOARD);
+
+  return {
+    AS: String(sheet.getRange("AS2").getValue()).toUpperCase() === "TRUE",
+    AT: String(sheet.getRange("AT2").getValue()).toUpperCase() === "TRUE",
+    AU: String(sheet.getRange("AU2").getValue()).toUpperCase() === "TRUE",
+    AV: String(sheet.getRange("AV2").getValue()).toUpperCase() === "TRUE"
+  };
+}
+
+// =========================
 // SCAN ENTRY
 // =========================
 function goToIdAndScan(entryId) {
@@ -158,26 +186,24 @@ function getScanEntry(row) {
   // FIXED COLUMN READING (NO INDEX GUESSING)
   // =========================
 
-  const allFields = [
-    // BDM
-    "Q","S","U","W","Z","AB",
-    "R","T","V","X","Y","AA","AK","AM","AU",
-    "AW","AX","AZ","BA",
+ const allFields = [
+  // BDM
+  "Q","S","U","W","Z","AB","R","T","V","X","Y","AA",
 
-    // CASE FOLDER
-    "AH","AI","AJ","AL","AN","AO","AP","AQ","AR","AS","AT","AV","AY","BB","BC","BD","BE","BF",
+  // CASE FOLDER
+  "AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","BB","BC","BD","BE","BF","BG", "BH","BI","BJ",
 
-    // EXIT
-    "BG","BH","BI","BJ",
+  // EXIT
+  "BL","BM","BN","BO",
 
-    // CASE MANAGEMENT
-    "AC","AD","AE","AF","AG",
+  // CASE MANAGEMENT
+  "AC","AD","AE","AF","AG","AH","AI","AJ",
 
-    // CITY LINK
-    "BM","BN","BO","BP","BQ","BR",
-    "BS","BT","BU","BV","BW","BX",
-    "BY","BZ","CA","CB","CC","CD","CE","CF","CG"
-  ];
+  "BK","BM","BN","BO","BP","BQ",
+  // CITY LINK
+  "BR","BS","BT","BU","BV","BW","BX",
+  "BY","BZ","CA","CB","CC","CD","CE","CF","CG","CH","CI"
+];
 
   // ✅ SAFE direct sheet reading
   allFields.forEach(col => {
@@ -199,20 +225,36 @@ function fillSheetForm(data) {
   const row = findRowById(entryId);
   if (!row) return;
 
-  const checkboxCols = [
-    "Q","S","U","W","Z","AB",
-    "AH","AI","AJ","AL","AN","AO","AQ","AP","AR","AT","AV","AY","BB",
-    "BC","BD","BE","BG","BH","BI","BJ",
-    "BM","BN","BO","BP","BQ","BR",
-    "BS","BT","BU","BV","BW","BX",
-    "BY","BZ","CA","CB","CC","CD","CE","CF","CG"
-  ];
 
-  const textCols = [
-    "R","T","V","X","Y","AA","AC",
-    "AD","AE","AF","AG","AK",
-    "AM","AS","AU","AW","AX","AZ","BA","BF"
-  ];
+const checkboxCols = [
+  "Q","S","U","W","Z","AB",
+
+  "AL","AO","AQ","AR",
+
+  "AT","AY","BD",
+
+  "BG","BH","BI","BJ", "BL", "BM", "BN", "BO",
+
+  // City Link Table
+  "BR","BS","BT",
+  "BU","BV","BW",
+  "BX","BY","BZ",
+  "CA","CB","CC",
+  "CD","CE","CF",
+  "CG","CH","CI"
+];
+
+const textCols = [
+  "R","T","V","X","Y","AA", "AH","AI","AJ",
+
+  "AN","AP","AV","AW","AX","AZ",
+
+  "BB","BC","BE","BF","BK",
+
+  "AC","AD","AE","AF","AG",
+
+  "AK","AM","AU","BA","AS"
+];
 
   // =========================
   // UPDATE FIELDS

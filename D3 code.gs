@@ -9,11 +9,18 @@ const CHECKBOX_MAP = {
   U: ["V"],
   W: ["X", "Y"],
   Z: ["AA"],
-  AJ: ["AK"],
-  AL: ["AM"],
-  AT: ["AU"],
-  AV: ["AW", "AX"],
-  AY: ["AZ", "BA"]
+  AB: ["AC"],
+
+  // CASE FOLDER
+  AM: ["AN"],
+  AO: ["AP"],
+  AU: ["AV"],
+  AW: ["AW"],
+  AX: ["AX"],
+  AY: ["AZ"],
+  BA: ["BB", "BC"],
+  BD: ["BE", "BF"],
+  BJ: ["BK"]
 };
 
 // =========================
@@ -63,50 +70,16 @@ function doPost(e) {
   try {
     let data = {};
 
-    // =========================
-    // SAFE JSON PARSE
-    // =========================
     if (e.postData && e.postData.contents) {
-      data = JSON.parse(e.postData.contents);
+      try {
+        data = JSON.parse(e.postData.contents);
+      } catch (err) {
+        data = e.parameter || {};
+      }
     } else {
       data = e.parameter || {};
     }
 
-    Logger.log(data);
-
-    // =========================
-    // UPDATE BUTTON SETTINGS
-    // =========================
-    if (
-      data.settingUpdate === true ||
-      data.settingUpdate === "true"
-    ) {
-
-      const sheet = SpreadsheetApp
-        .getActive()
-        .getSheetByName(CONFIG.DASHBOARD);
-
-      // force TRUE/FALSE boolean
-      const value =
-        data.value === true ||
-        data.value === "true";
-
-      sheet
-        .getRange(data.column + "2")
-        .setValue(value);
-
-      SpreadsheetApp.flush();
-
-      return jsonResponse({
-        status: "success",
-        updated: data.column,
-        value: value
-      });
-    }
-
-    // =========================
-    // NORMAL FORM SAVE
-    // =========================
     fillSheetForm(data);
 
     return jsonResponse({
@@ -114,9 +87,6 @@ function doPost(e) {
     });
 
   } catch (err) {
-
-    Logger.log(err);
-
     return jsonResponse({
       status: "error",
       message: err.toString()
@@ -216,26 +186,24 @@ function getScanEntry(row) {
   // FIXED COLUMN READING (NO INDEX GUESSING)
   // =========================
 
-  const allFields = [
-    // BDM
-    "Q","S","U","W","Z","AB",
-    "R","T","V","X","Y","AA","AK","AM","AU",
-    "AW","AX","AZ","BA",
+ const allFields = [
+  // BDM
+  "Q","S","U","W","Z","AB","R","T","V","X","Y","AA",
 
-    // CASE FOLDER
-    "AH","AI","AJ","AL","AN","AO","AP","AQ","AR","AS","AT","AV","AY","BB","BC","BD","BE","BF",
+  // CASE FOLDER
+  "AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","BB","BC","BD","BE","BF","BG", "BH","BI","BJ",
 
-    // EXIT
-    "BG","BH","BI","BJ",
+  // EXIT
+  "BL","BM","BN","BO",
 
-    // CASE MANAGEMENT
-    "AC","AD","AE","AF","AG",
+  // CASE MANAGEMENT
+  "AC","AD","AE","AF","AG","AH","AI","AJ",
 
-    // CITY LINK
-    "BM","BN","BO","BP","BQ","BR",
-    "BS","BT","BU","BV","BW","BX",
-    "BY","BZ","CA","CB","CC","CD","CE","CF","CG"
-  ];
+  "BK","BM","BN","BO","BP","BQ",
+  // CITY LINK
+  "BR","BS","BT","BU","BV","BW","BX",
+  "BY","BZ","CA","CB","CC","CD","CE","CF","CG","CH","CI"
+];
 
   // ✅ SAFE direct sheet reading
   allFields.forEach(col => {
@@ -257,20 +225,36 @@ function fillSheetForm(data) {
   const row = findRowById(entryId);
   if (!row) return;
 
-  const checkboxCols = [
-    "Q","S","U","W","Z","AB",
-    "AH","AI","AJ","AL","AN","AO","AQ","AP","AR","AT","AV","AY","BB",
-    "BC","BD","BE","BG","BH","BI","BJ",
-    "BM","BN","BO","BP","BQ","BR",
-    "BS","BT","BU","BV","BW","BX",
-    "BY","BZ","CA","CB","CC","CD","CE","CF","CG"
-  ];
 
-  const textCols = [
-    "R","T","V","X","Y","AA","AC",
-    "AD","AE","AF","AG","AK",
-    "AM","AS","AU","AW","AX","AZ","BA","BF"
-  ];
+const checkboxCols = [
+  "Q","S","U","W","Z","AB",
+
+  "AL","AO","AQ","AR",
+
+  "AT","AY","BD",
+
+  "BG","BH","BI","BJ", "BL", "BM", "BN", "BO",
+
+  // City Link Table
+  "BR","BS","BT",
+  "BU","BV","BW",
+  "BX","BY","BZ",
+  "CA","CB","CC",
+  "CD","CE","CF",
+  "CG","CH","CI"
+];
+
+const textCols = [
+  "R","T","V","X","Y","AA", "AH","AI","AJ",
+
+  "AN","AP","AV","AW","AX","AZ",
+
+  "BB","BC","BE","BF","BK",
+
+  "AC","AD","AE","AF","AG",
+
+  "AK","AM","AU","BA","AS"
+];
 
   // =========================
   // UPDATE FIELDS

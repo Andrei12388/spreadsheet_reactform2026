@@ -9,7 +9,7 @@ function Menu() {
     "https://script.google.com/macros/s/AKfycbyjHGpyAaeBVmV1Kd9AUJX4WULiqaDY05HWph6e97zFGyn64gqqkd7ra77IUX2w-BXW/exec";
 
   const API_URL_DISTRICT3 =
-    "https://script.google.com/macros/s/AKfycbwbYOSBTZoB744uY6UE5TQgyCY4QBwGqqblN8GnYBBe7-y4tvRqqKMhNKNMZ5SbmkkaVQ/exec";
+    "https://script.google.com/macros/s/AKfycbybb9jDdAY5d-qHTHCeSxEcfCkOsd9XWNGFdXAMDk3RLuJs-iQc6zdHJxaOH2P7oKV5/exec";
 
   const API_URL_HOLYSPIRIT =
     "https://script.google.com/macros/s/AKfycbwmfBWJ44qYo3iAuw73TqQT02USgsytuNJ3VrIi1ddoY0xfgcy35UU9ICaXV4Nc14k40A/exec";
