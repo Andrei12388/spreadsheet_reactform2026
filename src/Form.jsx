@@ -65,14 +65,16 @@ if (location.state?.district) {
     U: ["V"],
     W: ["X", "Y"],
     Z: ["AA"],
-    AJ: ["AK"],
-    AL: ["AM"],
-    AR: ["AS"],
-    AT: ["AU"],
-    AV: ["AW", "AX"],
-    AY: ["AZ", "BA"],
-    BE: ["BF"],
-    BG: ["BH"]
+   
+    //CASE FOLDER
+    AM: ["AN"],
+    AO: ["AP"],
+    AU: ["AV"],
+    AY: ["AZ"],
+    BA: ["BB", "BC"],
+    BD: ["BE", "BF"],
+    BJ: ["BK"],
+    
   };
 
 
@@ -89,28 +91,30 @@ const checkboxLabels = {
   AB: "OFW",
 
   // CASE FOLDER
-  AH: "GIS",
-  AI: "FRVA",
-  AJ: "SCSR",
-  AL: "FIP",
-  AN: "FIP.1 HEALTH",
-  AO: "FIP.2 EDUC",
-  AP: "FIP.3 EMPLOYMENT",
-  AQ: "FIP.4 LIVELIHOOD",
-  AR: "FIP: OTHERS",
-  AT: "TALAAN NG PAGBABAGO",
-  AV: "PINALAKAS FDS PACKAGE",
-  AY: "PTEMS",
-  BB: "TALAARAWAN",
-  BC: "EDUC REC",
-  BD: "IDS",
-  BE: "FAMILY REC",
+  AK: "GIS",
+  AL: "FRVA",
+  AM: "SCSR",
+  AO: "FIP",
+  AQ: "FIP.1 HEALTH",
+  AR: "FIP.2 EDUC",
+  AS: "FIP.3 EMPLOYMENT",
+  AT: "FIP.4 LIVELIHOOD",
+  AU: "FIP: OTHERS",
+  AW: "CSR",
+  AX: "HTP",
+  AY: "TALAAN NG PAGBABAGO",
+  BA: "PINALAKAS FDS PACKAGE",
+  BD: "PTEMS",
+  BG: "TALAARAWAN",
+  BH: "EDUC REC",
+  BI: "IDS",
+  BJ: "FAMILY REC",
 
   // EXIT
-  BG: "TAF",
-  BH: "PUGAY TOPIC",
-  BI: "KATIBAYAN",
-  BJ: "SOI"
+  BL: "TAF",
+  BM: "PUGAY TOPIC",
+  BN: "KATIBAYAN",
+  BO: "SOI"
 };
 
 const textLabels = {
@@ -123,24 +127,56 @@ const textLabels = {
   AA: "QC ID Number",
 
   // CASE FOLDER
-  AK: "SCSR LINK",
-  AM: "FIP LINK",
-  AU: "TALAAN DATE",
-  AW: "PINALAKAS FDS PACKAGE LINK",
-  AX: "PINALAKAS DATE",
-  AZ: "PTEMS LINK",
-  BA: "PTEMS DATE",
-  BF: "HOUSEHOLD FOLDER LINK",
+  AN: "SCSR LINK",
+  AP: "FIP LINK",
+  AV: "Specific Needs",
+  AW: "CSR",
+  AX: "HTP",
+  AZ: "TALAAN DATE",
+  BB: "PINALAKAS FDS PACKAGE LINK",
+  BC: "PINALAKAS DATE",
+  BE: "PTEMS LINK",
+  BF: "PTEMS DATE",
+  BK: "HOUSEHOLD FOLDER LINK",
 
-  AS: "Specific Needs",
 
   // CASE MANAGEMENT
   AC: "SWDI LOWB 2025",
-  AD: "SWDI SCORE",
-  AE: "NATURAL ATTRITION",
-  AF: "CANDIDACY STATUS",
-  AG: "TARGET FOR PUGAY SA TAGUMPAY"
+  AD: "SWDI 2025 SCORE",
+  AE: "2025 NATURAL ATTRITION",
+  AF: "SWDI LOWB 2026",
+  AG: "SWDI 2026 SCORE",
+  AH: "2026 NATURAL ATTRITION",
+  AI: "CANDIDACY STATUS",
+  AJ: "TARGET FOR PUGAY SA TAGUMPAY"
 };
+
+const bdmFields = ["Q", "S", "U", "W", "Z", "AB"];
+const caseFolderFields = [
+  // Core checkbox-driven fields (from checkboxMap)
+  "AM",
+  "AO",
+  "AU",
+  "AW",
+  "AX",
+  "AY",
+  "BA",
+  "BD",
+  "BJ",
+
+  // Standalone / text-linked / extra fields
+  "AK",
+  "AL",
+  "AQ",
+  "AR",
+  "AS",
+  "AT",
+  "BG",
+  "BH",
+  "BI"
+];
+const exitFields = ["BL", "BM", "BN", "BO"];
+const caseManagementFields = ["AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ"];
 
 
 
@@ -321,30 +357,35 @@ function isVisible(field) {
 
 function calculateProgress() {
 
-  // ALL checkbox fields
-  const checkboxFields = [
-    "Q","S","U","W","Z","AB",
-    "AH","AI","AJ","AL","AN","AO","AP","AQ","AR",
-    "AT","AV","AY","BB","BC","BD","BE",
-    "BG","BH","BI","BJ",
+const checkboxFields = [
+  "Q","S","U","W","Z","AB",
 
-    // City Link Table
-    "BM","BN","BO",
-    "BP","BQ","BR",
-    "BS","BT","BU",
-    "BV","BW","BX",
-    "BY","BZ","CA",
-    "CB","CC","CD",
-    "CE","CF","CG"
-  ];
+  "AL","AO","AQ","AR",
 
-  // ALL text inputs
-  const textFields = [
-    "R","T","V","X","Y","AA",
-    "AK","AM","AU","AW","AX","AZ","BA", "BF",
-    "AS",
-    "AC","AD","AE","AF","AG"
-  ];
+  "AT","AY","BD",
+
+  "BG","BH","BI","BJ", "BL", "BM", "BN", "BO",
+
+  // City Link Table
+  "BR","BS","BT",
+  "BU","BV","BW",
+  "BX","BY","BZ",
+  "CA","CB","CC",
+  "CD","CE","CF",
+  "CG","CH","CI"
+];
+
+const textFields = [
+  "R","T","V","X","Y","AA", "AH","AI","AJ",
+
+  "AN","AP","AV","AW","AX","AZ",
+
+  "BB","BC","BE","BF","BK",
+
+  "AC","AD","AE","AF","AG",
+
+  "AK","AM","AU","BA","AS"
+];
 
   let filled = 0;
   let total = 0;
@@ -544,11 +585,10 @@ function getMissingFields() {
   <div className="section-card">
     <h3>BENEFICIARY DATA MANAGEMENT (BDM)</h3>
 
-    {["Q", "S", "U", "W", "Z", "AB"].map(id => (
+   {bdmFields.map(id => (
   <div key={id} style={{ marginBottom: 10 }}>
-
-    {/* CHECKBOX */}
-    <label style={{ display: "block" }}>
+    
+    <label>
       <input
         type="checkbox"
         id={id}
@@ -558,32 +598,18 @@ function getMissingFields() {
       {checkboxLabels[id]}
     </label>
 
-    {/* RELATED TEXT INPUTS */}
     {checkboxMap[id]?.map(textId => (
       isVisible(textId) && (
-        <label
-          key={textId}
-          style={{
-            display: "block",
-            marginLeft: 20,
-            marginTop: 4
-          }}
-        >
+        <label key={textId} style={{ marginLeft: 20 }}>
           {textLabels[textId]}
-
           <input
             id={textId}
             value={formData[textId] || ""}
             onChange={handleChange}
-            style={{ display: "block", width: "100%", border: missingFields.includes(textLabels[textId])
-    ? "2px solid red"
-    : "1px solid #ccc" }}
           />
-
         </label>
       )
     ))}
-
   </div>
 ))}
 
@@ -596,11 +622,7 @@ function getMissingFields() {
 <div className="section-card">
   <h3>CASE FOLDER</h3>
 
-  {[
-    "AH","AI","AJ","AL","AN","AO","AP",
-    "AQ","AR","AT","AV","AY",
-    "BB","BC","BD","BE"
-  ].map(id => (
+  {caseFolderFields.map(id => (
 
     <div key={id} style={{ marginBottom: 10 }}>
 
@@ -668,7 +690,7 @@ function getMissingFields() {
   }}>
       <h3>CASE MANAGEMENT</h3>
 
-      {["AC", "AD", "AE", "AF", "AG"].map(id => (
+      {caseManagementFields.map(id => (
          <label>
        {textLabels[id]}
         <input
@@ -694,7 +716,7 @@ function getMissingFields() {
  
    <h3>EXIT / GRADUATION</h3>
 
-    {["BG", "BH", "BI", "BJ"].map(id => (
+    {exitFields.map(id => (
       <label key={id}>
         <input
           type="checkbox"
@@ -736,12 +758,12 @@ function getMissingFields() {
 
   <tbody>
     {[
-      ["Period 1", "BM", "BN", "BO"],
-      ["Period 2", "BP", "BQ", "BR"],
-      ["Period 3", "BS", "BT", "BU"],
-      ["Period 4", "BV", "BW", "BX"],
-      ["Period 5", "BY", "BZ", "CA"],
-      ["Period 6", "CB", "CC", "CD"],
+      ["Period 1", "BR", "BS", "BT"],
+      ["Period 2", "BU", "BV", "BW"],
+      ["Period 3", "BX", "BY", "BZ"],
+      ["Period 4", "CA", "CB", "CC"],
+      ["Period 5", "CD", "CE", "CF"],
+      ["Period 6", "CG", "CH", "CI"],
     ].map(([label, a, b, c]) => (
       <tr key={label}>
         <td>{label}</td>
