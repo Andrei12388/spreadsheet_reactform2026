@@ -59,11 +59,23 @@ function Menu() {
         style={{
           height: "100vh",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <h2>Loading...</h2>
+         <img
+          src="/logo.png"
+          width={260}
+          height={80}
+          style={{
+            display: "block",
+            marginBottom: "10px",
+          }}
+          alt="logo"
+        />
+        <div className="spinner" />
+       
       </div>
     );
   }
