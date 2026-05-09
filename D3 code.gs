@@ -9,14 +9,12 @@ const CHECKBOX_MAP = {
   U: ["V"],
   W: ["X", "Y"],
   Z: ["AA"],
-  AB: ["AC"],
 
   // CASE FOLDER
   AM: ["AN"],
   AO: ["AP"],
   AU: ["AV"],
-  AW: ["AW"],
-  AX: ["AX"],
+ 
   AY: ["AZ"],
   BA: ["BB", "BC"],
   BD: ["BE", "BF"],

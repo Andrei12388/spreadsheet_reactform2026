@@ -100,8 +100,7 @@ const checkboxLabels = {
   AS: "FIP.3 EMPLOYMENT",
   AT: "FIP.4 LIVELIHOOD",
   AU: "FIP: OTHERS",
-  AW: "CSR",
-  AX: "HTP",
+ 
   AY: "TALAAN NG PAGBABAGO",
   BA: "PINALAKAS FDS PACKAGE",
   BD: "PTEMS",
@@ -157,12 +156,10 @@ const caseFolderFields = [
   "AM",
   "AO",
   "AU",
-  "AW",
-  "AX",
   "AY",
   "BA",
   "BD",
-  "BJ",
+  
 
   // Standalone / text-linked / extra fields
   "AK",
@@ -173,10 +170,12 @@ const caseFolderFields = [
   "AT",
   "BG",
   "BH",
-  "BI"
+  "BI",
+  "BJ",
 ];
 const exitFields = ["BL", "BM", "BN", "BO"];
 const caseManagementFields = ["AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ"];
+const caseLoadTextFields = ["AW", "AX",];
 
 
 
@@ -676,8 +675,26 @@ function getMissingFields() {
   ))}
 
   {/* NON-CHECKBOX TEXT FIELDS */}
+  <div className="section-card" style={{
+    display: "flex",
+    flexDirection: "column"
+  }}>
 
-
+      {caseLoadTextFields.map(id => (
+         <label>
+       {textLabels[id]}
+        <input
+          key={id}
+         
+          id={id}
+          value={formData[id] || ""}
+          onChange={handleChange}
+          style={{ display: "block", marginBottom: 5 }}
+        />
+        </label>
+      ))}
+      
+  </div>
 </div>
 
 
