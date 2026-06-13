@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import "jspdf-autotable";
 
 const API_URL =
   "https://script.google.com/macros/s/AKfycbysXQn2HtAnUpqKEjU2l-2XhYqZxdrIk2J1o0YwsQQPlcFQdQhoC7uISMLfTpV_JmU3Cg/exec";
@@ -77,7 +77,7 @@ export default function AdminCityLinkEntries() {
       pdf.setFont("helvetica", "normal");
 
       const goalTable = [["Overall Goal", entry.OVERALL_GOAL || "__________________________"]];
-      autoTable(pdf, {
+      pdf.autoTable({
         body: goalTable,
         startY: y,
         margin: { left: margin, right: margin },
@@ -116,7 +116,7 @@ export default function AdminCityLinkEntries() {
         entry.REMARKS || "",
       ]];
 
-      autoTable(pdf, {
+      pdf.autoTable({
         head: tableHead,
         body: tableBody,
         startY: y,
