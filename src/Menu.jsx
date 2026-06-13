@@ -2,17 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Menu() {
-  const API_URL_MILING =
-    "https://script.google.com/macros/s/AKfycbyhvp4QYamq0xhSA6ZdwvOTsnaAbfKl8sw6J_RjGGE00O4yHJCTvhUe1tfUT2MR7A78yA/exec";
-
-  const API_URL_DISTRICT4 =
-    "https://script.google.com/macros/s/AKfycbxgjvQUYNBY5tCfufH2RV03dw9Nr6juE1Ks3uefXuYrkcH2D7mjPDHy9LCSm7IITivR/exec";
-
-  const API_URL_DISTRICT3 =
-    "https://script.google.com/macros/s/AKfycbzHDKXz0VW0S5XQp29iXCuWItPXPmF-X-9rDlNHPnikVYi0WMKKatgcXRi6fivYBWQJgQ/exec";
-
-  const API_URL_HOLYSPIRIT =
-    "https://script.google.com/macros/s/AKfycbxkYOjPjlKvQxPMZg3aSnw1CZV4yDdP0eI42_C-Rwjgg75UokVS8s2b6AeEvSZ4ZMNuAA/exec";
+  // Proxy paths (dev server proxies these to the real Google Apps Script endpoints)
+  const API_URL_MILING = "/api/miling";
+  const API_URL_DISTRICT4 = "/api/district4";
+  const API_URL_DISTRICT3 = "/api/district3";
+  const API_URL_HOLYSPIRIT = "/api/holyspirit";
 
   const navigate = useNavigate();
 
@@ -130,6 +124,19 @@ function Menu() {
         >
           <h2>↓</h2>
           <p>Please click or tap your destination.</p>
+        </div>
+        {/* City Link Form quick access */}
+        <div style={{ marginTop: 20 }}>
+          <button
+            style={{ width: 200, height: 40, backgroundColor: "#4b5563", color: "white" }}
+            onClick={() => {
+              // Use district3 API by default for City Link entries
+              sessionStorage.setItem("API_URL", API_URL_DISTRICT3);
+              navigate("/citylink", { state: { API_URL: API_URL_DISTRICT3 } });
+            }}
+          >
+            City Link Form
+          </button>
         </div>
 
         <br />
