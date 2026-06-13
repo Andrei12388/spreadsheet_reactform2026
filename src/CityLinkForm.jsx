@@ -92,7 +92,7 @@ export default function CityLinkForm() {
       <form onSubmit={handleSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 15, marginBottom: 20 }}>
           <div>
-            <label>HHID *</label>
+            <label>House Hold ID *</label>
             <input 
               name="HHID" 
               value={formData.HHID} 
@@ -101,9 +101,9 @@ export default function CityLinkForm() {
               style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
             />
           </div>
-<br></br>
+
           <div>
-            <label>HH_GRANTEE</label>
+            <label>House Hold Grantee</label>
             <input 
               name="HH_GRANTEE" 
               value={formData.HH_GRANTEE} 
@@ -111,9 +111,9 @@ export default function CityLinkForm() {
               style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
             />
           </div>
-    <br></br>
+   
           <div>
-            <label>CITY_LINK</label>
+            <label>City Link Name</label>
             <input 
               name="CITY_LINK" 
               value={formData.CITY_LINK} 
@@ -123,7 +123,7 @@ export default function CityLinkForm() {
           </div>
             <br></br>
           <div style={{ gridColumn: "1 / -1" }}>
-            <label>OVERALL_GOAL</label> 
+            <label>OVERALL GOAL</label> 
             <textarea 
               name="OVERALL_GOAL" 
               value={formData.OVERALL_GOAL} 
@@ -209,7 +209,7 @@ export default function CityLinkForm() {
           <button 
             type="submit" 
             disabled={loading}
-            style={{ backgroundColor: "#16a34a", color: "white", padding: 10, borderRadius: 4 }}
+            style={{ backgroundColor: "#16a34a", color: "white", padding: 10, borderRadius: 4, cursor: loading ? "not-allowed" : "pointer" }}
           >
             {loading ? "Submitting..." : "Submit"}
           </button>
@@ -219,6 +219,17 @@ export default function CityLinkForm() {
           {message}
         </div>
       </form>
+
+      {loading && (
+        <div className="loading">
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+            <div className="spinner" />
+            <div style={{ fontSize: 18, fontWeight: 700, color: "#111" }}>
+              Submitting...
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
