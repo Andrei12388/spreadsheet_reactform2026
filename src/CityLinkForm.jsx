@@ -143,8 +143,8 @@ export default function CityLinkForm() {
     y += 10;
 
     // long underline line (visual spacing like your template)
-    pdf.line(margin, y, pageWidth - margin, y);
-    y += 10;
+   // pdf.line(margin, y, pageWidth - margin, y);
+    //y += 10;
 
     // ================= TABLE =================
     const tableHead = [[
@@ -166,33 +166,57 @@ export default function CityLinkForm() {
     ]];
 
     autoTable(pdf, {
-      head: tableHead,
-      body: tableBody,
-      startY: y,
-      margin: { left: margin, right: margin },
+  head: tableHead,
+  body: tableBody,
+  startY: y,
+  margin: { left: margin, right: margin },
 
-      styles: {
-        fontSize: 8,
-        cellPadding: 2,
-        valign: "top",
-        overflow: "linebreak"
-      },
+  // ================= BASE STYLE =================
+  styles: {
+    fontSize: 8,
+    cellPadding: 2,
+    valign: "top",
+    overflow: "linebreak",
+    textColor: [0, 0, 0],        // black text
+    lineColor: [0, 0, 0],        // BLACK borders
+    lineWidth: 0.2               // thin Word-like border
+  },
 
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-        fontStyle: "bold",
-        halign: "center"
-      },
+  // ================= HEADER (NO COLOR, ONLY BOLD) =================
+  headStyles: {
+    fillColor: false,            // no background color
+    textColor: [0, 0, 0],        // black text
+    fontStyle: "bold",
+    halign: "center",
+    lineColor: [0, 0, 0],
+    lineWidth: 0.2
+  },
 
-      columnStyles: {
-        0: { cellWidth: 35 },
-        1: { cellWidth: 35 },
-        2: { cellWidth: 25 },
-        3: { cellWidth: 25 },
-        4: { cellWidth: 35 },
-        5: { cellWidth: 30 }
-      },
+  // ================= BODY =================
+  bodyStyles: {
+    fillColor: false,            // no shading
+    textColor: [0, 0, 0]
+  },
+
+  // ================= REMOVE STRIPES =================
+  alternateRowStyles: {
+    fillColor: false
+  },
+
+  // ================= COLUMN WIDTHS =================
+columnStyles: {
+  0: { cellWidth: "auto" },
+  1: { cellWidth: "auto" },
+  2: { cellWidth: "auto" },
+  3: { cellWidth: "auto" },
+  4: { cellWidth: "auto" },
+  5: { cellWidth: "auto" }
+},
+
+  // ================= OUTER BORDER STYLE =================
+  tableLineColor: [0, 0, 0],
+  tableLineWidth: 0.2
+
 
      /* didDrawPage: function () {
         pdf.setFontSize(9);
@@ -206,22 +230,25 @@ export default function CityLinkForm() {
         */
     });
 
-    // ================= FOOTER SECTION =================
+ // ================= FOOTER SECTION =================
     let footerY = pdf.lastAutoTable.finalY + 15;
 
     pdf.setFontSize(10);
     pdf.text("Prepared by:", margin, footerY);
     pdf.text("Facilitated and Reviewed by:", pageWidth - 80, footerY);
-
-    footerY += 15;
-
-    pdf.text(entry.HH_GRANTEE || "__________________________", margin + 5, footerY);
-    pdf.text(entry.CITY_LINK || "__________________________", pageWidth - 80, footerY);
-
     footerY += 8;
 
+    pdf.text(entry.HH_GRANTEE, margin, footerY);
+    pdf.text(entry.CITY_LINK, pageWidth - 80, footerY);
+
+    footerY += 8;
+pdf.setFontSize(9);
+pdf.setFont("helvetica", "bold");
     pdf.text("NAME OF 4Ps MEMBER", margin, footerY);
     pdf.text("NAME OF CITY LINK", pageWidth - 80, footerY);
+
+// reset to normal
+pdf.setFont("helvetica", "normal");
   });
 
   pdf.save(`FIP_${new Date().toISOString().split("T")[0]}.pdf`);
