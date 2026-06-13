@@ -106,84 +106,127 @@ export default function CityLinkForm() {
   }
 
   async function generateAllEntriesPDF() {
-    if (allEntries.length === 0) {
-      setMessage("No entries to export");
-      return;
-    }
-
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4"
-    });
-
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 15;
-
-    allEntries.forEach((entry, index) => {
-      if (index > 0) {
-        pdf.addPage();
-      }
-
-      let yPos = margin;
-
-      // Header
-      pdf.setFontSize(16);
-      pdf.text("CITY LINK FORM", margin, yPos);
-      yPos += 10;
-
-      pdf.setFontSize(10);
-      pdf.text(`Entry ${index + 1} of ${allEntries.length}`, margin, yPos);
-      yPos += 8;
-
-      pdf.setLineWidth(0.5);
-      pdf.line(margin, yPos, pageWidth - margin, yPos);
-      yPos += 8;
-
-      // Data table
-      const tableData = [
-        ["Field", "Value"],
-        ["HHID", entry.HHID || "---"],
-        ["HH_GRANTEE", entry.HH_GRANTEE || "---"],
-        ["CITY_LINK", entry.CITY_LINK || "---"],
-        ["OVERALL_GOAL", entry.OVERALL_GOAL || "---"],
-        ["SPE_OBJ", entry.SPE_OBJ || "---"],
-        ["SPE_ACT", entry.SPE_ACT || "---"],
-        ["RES_PER", entry.RES_PER || "---"],
-        ["TF", entry.TF || "---"],
-        ["EXP_RES", entry.EXP_RES || "---"],
-        ["REMARKS", entry.REMARKS || "---"]
-      ];
-
-      autoTable(pdf, {
-        head: [tableData[0]],
-        body: tableData.slice(1),
-        startY: yPos,
-        margin: margin,
-        columnStyles: {
-          0: { cellWidth: 50, fontStyle: "bold", textColor: [255, 255, 255], fillColor: [64, 64, 64] }
-        },
-        headStyles: { fillColor: [41, 128, 185], textColor: [255, 255, 255], fontStyle: "bold" },
-        alternateRowStyles: { fillColor: [245, 245, 245] },
-        didDrawPage: function(data) {
-          const pageSize = pdf.internal.pageSize;
-          const pageHeight = pageSize.getHeight();
-          pdf.setFontSize(9);
-          pdf.setTextColor(128);
-          pdf.text(
-            `Page ${pdf.internal.getNumberOfPages()}`,
-            pageWidth / 2,
-            pageHeight - 10,
-            { align: "center" }
-          );
-        }
-      });
-    });
-
-    pdf.save(`CityLink_AllEntries_${new Date().toISOString().split("T")[0]}.pdf`);
-    setMessage(`✅ PDF generated with ${allEntries.length} entries`);
+  if (allEntries.length === 0) {
+    setMessage("No entries to export");
+    return;
   }
+
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4"
+  });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const margin = 15;
+
+  allEntries.forEach((entry, index) => {
+    if (index > 0) pdf.addPage();
+
+    let y = margin;
+
+    // ================= HEADER =================
+    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("FAMILY INTERVENTION PLAN (FIP)", pageWidth / 2, y, { align: "center" });
+
+    y += 10;
+
+    // Overall Goal label + underline style
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Overall Goal:", margin, y);
+
+    pdf.setFont("helvetica", "normal");
+    pdf.text(entry.OVERALL_GOAL || "__________________________", margin + 35, y);
+
+    y += 10;
+
+    // long underline line (visual spacing like your template)
+    pdf.line(margin, y, pageWidth - margin, y);
+    y += 10;
+
+    // ================= TABLE =================
+    const tableHead = [[
+      "Specific Objectives",
+      "Specific Activity",
+      "Responsible Person",
+      "Timeframe",
+      "Expected Result",
+      "Remarks"
+    ]];
+
+    const tableBody = [[
+      entry.SPE_OBJ || "",
+      entry.SPE_ACT || "",
+      entry.RES_PER || "",
+      entry.TF || "",
+      entry.EXP_RES || "",
+      entry.REMARKS || ""
+    ]];
+
+    autoTable(pdf, {
+      head: tableHead,
+      body: tableBody,
+      startY: y,
+      margin: { left: margin, right: margin },
+
+      styles: {
+        fontSize: 8,
+        cellPadding: 2,
+        valign: "top",
+        overflow: "linebreak"
+      },
+
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontStyle: "bold",
+        halign: "center"
+      },
+
+      columnStyles: {
+        0: { cellWidth: 35 },
+        1: { cellWidth: 35 },
+        2: { cellWidth: 25 },
+        3: { cellWidth: 25 },
+        4: { cellWidth: 35 },
+        5: { cellWidth: 30 }
+      },
+
+     /* didDrawPage: function () {
+        pdf.setFontSize(9);
+        pdf.text(
+          `Page ${pdf.internal.getNumberOfPages()}`,
+          pageWidth / 2,
+          285,
+          { align: "center" }
+        );
+      }
+        */
+    });
+
+    // ================= FOOTER SECTION =================
+    let footerY = pdf.lastAutoTable.finalY + 15;
+
+    pdf.setFontSize(10);
+    pdf.text("Prepared by:", margin, footerY);
+    pdf.text("Facilitated and Reviewed by:", pageWidth - 80, footerY);
+
+    footerY += 15;
+
+    pdf.text(entry.HH_GRANTEE || "__________________________", margin + 5, footerY);
+    pdf.text(entry.CITY_LINK || "__________________________", pageWidth - 80, footerY);
+
+    footerY += 8;
+
+    pdf.text("NAME OF 4Ps MEMBER", margin, footerY);
+    pdf.text("NAME OF CITY LINK", pageWidth - 80, footerY);
+  });
+
+  pdf.save(`FIP_${new Date().toISOString().split("T")[0]}.pdf`);
+  setMessage(`✅ FIP PDF generated (${allEntries.length} entries)`);
+}
 
   function handlePrint() {
     window.print();
