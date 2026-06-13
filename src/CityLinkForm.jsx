@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default function CityLinkForm() {
   const location = useLocation();
@@ -23,6 +25,8 @@ export default function CityLinkForm() {
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [allEntries, setAllEntries] = useState([]);
+  const [showAllEntries, setShowAllEntries] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -41,8 +45,13 @@ export default function CityLinkForm() {
     try {
       const res = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "add", data: formData }),
+        headers: {
+          "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+          action: "add",
+          data: formData
+        })
       });
 
       const result = await res.json();
@@ -71,80 +80,276 @@ export default function CityLinkForm() {
     setLoading(false);
   }
 
+  async function fetchAllEntries() {
+    if (!API_URL) return setMessage("No API URL configured");
+
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const res = await fetch(API_URL);
+      const result = await res.json();
+
+      if (result.status === "success" && result.data) {
+        setAllEntries(result.data);
+        setShowAllEntries(true);
+        setMessage(`✅ Loaded ${result.data.length} entries`);
+      } else {
+        setMessage("Failed to load entries");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Error fetching entries");
+    }
+
+    setLoading(false);
+  }
+
+  async function generateAllEntriesPDF() {
+    if (allEntries.length === 0) {
+      setMessage("No entries to export");
+      return;
+    }
+
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4"
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 15;
+
+    allEntries.forEach((entry, index) => {
+      if (index > 0) {
+        pdf.addPage();
+      }
+
+      let yPos = margin;
+
+      // Header
+      pdf.setFontSize(16);
+      pdf.text("CITY LINK FORM", margin, yPos);
+      yPos += 10;
+
+      pdf.setFontSize(10);
+      pdf.text(`Entry ${index + 1} of ${allEntries.length}`, margin, yPos);
+      yPos += 8;
+
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, yPos, pageWidth - margin, yPos);
+      yPos += 8;
+
+      // Data table
+      const tableData = [
+        ["Field", "Value"],
+        ["HHID", entry.HHID || "---"],
+        ["HH_GRANTEE", entry.HH_GRANTEE || "---"],
+        ["CITY_LINK", entry.CITY_LINK || "---"],
+        ["OVERALL_GOAL", entry.OVERALL_GOAL || "---"],
+        ["SPE_OBJ", entry.SPE_OBJ || "---"],
+        ["SPE_ACT", entry.SPE_ACT || "---"],
+        ["RES_PER", entry.RES_PER || "---"],
+        ["TF", entry.TF || "---"],
+        ["EXP_RES", entry.EXP_RES || "---"],
+        ["REMARKS", entry.REMARKS || "---"]
+      ];
+
+      autoTable(pdf, {
+        head: [tableData[0]],
+        body: tableData.slice(1),
+        startY: yPos,
+        margin: margin,
+        columnStyles: {
+          0: { cellWidth: 50, fontStyle: "bold", textColor: [255, 255, 255], fillColor: [64, 64, 64] }
+        },
+        headStyles: { fillColor: [41, 128, 185], textColor: [255, 255, 255], fontStyle: "bold" },
+        alternateRowStyles: { fillColor: [245, 245, 245] },
+        didDrawPage: function(data) {
+          const pageSize = pdf.internal.pageSize;
+          const pageHeight = pageSize.getHeight();
+          pdf.setFontSize(9);
+          pdf.setTextColor(128);
+          pdf.text(
+            `Page ${pdf.internal.getNumberOfPages()}`,
+            pageWidth / 2,
+            pageHeight - 10,
+            { align: "center" }
+          );
+        }
+      });
+    });
+
+    pdf.save(`CityLink_AllEntries_${new Date().toISOString().split("T")[0]}.pdf`);
+    setMessage(`✅ PDF generated with ${allEntries.length} entries`);
+  }
+
+  function handlePrint() {
+    window.print();
+  }
+
   return (
     <div style={{ padding: 20 }}>
-      <button onClick={() => navigate(-1)} style={{ marginBottom: 10 }}>
-        ← Back
-      </button>
+      <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
+        <button onClick={() => navigate(-1)}>← Back</button>
+        <button 
+          onClick={fetchAllEntries} 
+          style={{ backgroundColor: "#8b5cf6", color: "white" }}
+          disabled={loading}
+        >
+          📋 View All Entries
+        </button>
+        <button 
+          onClick={generateAllEntriesPDF} 
+          disabled={allEntries.length === 0 || loading}
+          style={{ backgroundColor: "#2563eb", color: "white" }}
+        >
+          📥 Export All to PDF
+        </button>
+      </div>
+
+      {showAllEntries && allEntries.length > 0 && (
+        <div style={{ backgroundColor: "#f0f9ff", padding: 15, borderRadius: 8, marginBottom: 20, border: "1px solid #0284c7" }}>
+          <h4>Total Entries: {allEntries.length}</h4>
+          <div style={{ maxHeight: 200, overflowY: "auto" }}>
+            {allEntries.map((entry, i) => (
+              <div key={i} style={{ padding: 8, borderBottom: "1px solid #ccc", fontSize: 12 }}>
+                <strong>Entry {i + 1}:</strong> {entry.HHID} - {entry.HH_GRANTEE}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <h3>City Link - Data Entry</h3>
 
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>HHID</label>
-          <input name="HHID" value={formData.HHID} onChange={handleChange} />
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 15, marginBottom: 20 }}>
+          <div>
+            <label>HHID *</label>
+            <input 
+              name="HHID" 
+              value={formData.HHID} 
+              onChange={handleChange} 
+              required
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
+            />
+          </div>
+
+          <div>
+            <label>HH_GRANTEE</label>
+            <input 
+              name="HH_GRANTEE" 
+              value={formData.HH_GRANTEE} 
+              onChange={handleChange}
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
+            />
+          </div>
+
+          <div>
+            <label>CITY_LINK</label>
+            <input 
+              name="CITY_LINK" 
+              value={formData.CITY_LINK} 
+              onChange={handleChange}
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
+            />
+          </div>
+
+          <div>
+            <label>OVERALL_GOAL</label>
+            <input 
+              name="OVERALL_GOAL" 
+              value={formData.OVERALL_GOAL} 
+              onChange={handleChange}
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
+            />
+          </div>
+
+          <div>
+            <label>SPE_OBJ</label>
+            <select 
+              name="SPE_OBJ" 
+              value={formData.SPE_OBJ} 
+              onChange={handleChange}
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
+            >
+              <option value="">-- select --</option>
+              <option value="OBJ_A">Objective A</option>
+              <option value="OBJ_B">Objective B</option>
+              <option value="OBJ_C">Objective C</option>
+            </select>
+          </div>
+
+          <div>
+            <label>SPE_ACT</label>
+            <select 
+              name="SPE_ACT" 
+              value={formData.SPE_ACT} 
+              onChange={handleChange}
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
+            >
+              <option value="">-- select action --</option>
+              <option value="ACT_1">Action 1</option>
+              <option value="ACT_2">Action 2</option>
+              <option value="ACT_3">Action 3</option>
+            </select>
+          </div>
+
+          <div>
+            <label>RES_PER</label>
+            <input 
+              name="RES_PER" 
+              value={formData.RES_PER} 
+              onChange={handleChange}
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
+            />
+          </div>
+
+          <div>
+            <label>TF</label>
+            <input 
+              name="TF" 
+              value={formData.TF} 
+              onChange={handleChange}
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
+            />
+          </div>
+
+          <div>
+            <label>EXP_RES</label>
+            <input 
+              name="EXP_RES" 
+              value={formData.EXP_RES} 
+              onChange={handleChange}
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
+            />
+          </div>
+
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label>REMARKS</label>
+            <textarea 
+              name="REMARKS" 
+              value={formData.REMARKS} 
+              onChange={handleChange}
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4, minHeight: 80 }}
+            />
+          </div>
         </div>
 
-        <div>
-          <label>HH_GRANTEE</label>
-          <input name="HH_GRANTEE" value={formData.HH_GRANTEE} onChange={handleChange} />
-        </div>
-
-        <div>
-          <label>CITY_LINK</label>
-          <input name="CITY_LINK" value={formData.CITY_LINK} onChange={handleChange} />
-        </div>
-
-        <div>
-          <label>OVERALL_GOAL</label>
-          <input name="OVERALL_GOAL" value={formData.OVERALL_GOAL} onChange={handleChange} />
-        </div>
-
-        <div>
-          <label>SPE_OBJ</label>
-          <select name="SPE_OBJ" value={formData.SPE_OBJ} onChange={handleChange}>
-            <option value="">-- select --</option>
-            <option value="OBJ_A">Objective A</option>
-            <option value="OBJ_B">Objective B</option>
-            <option value="OBJ_C">Objective C</option>
-          </select>
-        </div>
-
-        <div>
-          <label>SPE_ACT</label>
-          <select name="SPE_ACT" value={formData.SPE_ACT} onChange={handleChange}>
-            <option value="">-- select action --</option>
-            <option value="ACT_1">Action 1</option>
-            <option value="ACT_2">Action 2</option>
-            <option value="ACT_3">Action 3</option>
-          </select>
-        </div>
-
-        <div>
-          <label>RES_PER</label>
-          <input name="RES_PER" value={formData.RES_PER} onChange={handleChange} />
-        </div>
-
-        <div>
-          <label>TF</label>
-          <input name="TF" value={formData.TF} onChange={handleChange} />
-        </div>
-
-        <div>
-          <label>EXP_RES</label>
-          <input name="EXP_RES" value={formData.EXP_RES} onChange={handleChange} />
-        </div>
-
-        <div>
-          <label>REMARKS</label>
-          <textarea name="REMARKS" value={formData.REMARKS} onChange={handleChange} />
-        </div>
-
-        <div style={{ marginTop: 10 }}>
-          <button type="submit" disabled={loading}>
+        <div style={{ display: "flex", gap: 10 }}>
+          <button 
+            type="submit" 
+            disabled={loading}
+            style={{ backgroundColor: "#16a34a", color: "white", padding: 10, borderRadius: 4 }}
+          >
             {loading ? "Submitting..." : "Submit"}
           </button>
-          <span style={{ marginLeft: 10 }}>{message}</span>
+        </div>
+
+        <div style={{ marginTop: 10, color: message.includes("success") ? "green" : "red" }}>
+          {message}
         </div>
       </form>
     </div>
