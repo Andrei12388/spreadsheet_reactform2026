@@ -36,6 +36,10 @@ export default function AdminCityLinkEntries() {
     setLoading(false);
   }
 
+  function openLink() {
+  window.open("https://docs.google.com/spreadsheets/d/1QmCbvUmbwztsIFzdf8KDML5y_kzA42rlD8NEe4_DGpc/edit?gid=0#gid=0", "_blank", "noopener,noreferrer");
+}
+
   function handlePrint() {
     if (allEntries.length === 0) {
       setMessage("No entries loaded to print");
@@ -196,6 +200,12 @@ export default function AdminCityLinkEntries() {
         >
           🖨️ Print List
         </button>
+        <button
+  onClick={openLink}
+  style={{ backgroundColor: "#34880e", color: "white" }}
+>
+  🔗 Open SpreadSheet Database
+</button>
       </div>
 
       <h3>Admin: City Link Entries</h3>

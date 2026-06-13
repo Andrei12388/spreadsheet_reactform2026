@@ -13,8 +13,8 @@ function App() {
 
       {/* Main App page */}
       <Route path="/form" element={<Form />} />
-      <Route path="/citylink" element={<CityLinkForm />} />
-      <Route path="/admin/citylink" element={<AdminCityLinkEntries />} />
+      <Route path="/fip" element={<CityLinkForm />} />
+      <Route path="/admin/fip" element={<AdminCityLinkEntries />} />
       <Route path="/setting" element={<Setting />} />
     </Routes>
   )
