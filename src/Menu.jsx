@@ -125,7 +125,7 @@ function Menu() {
           <h2>↓</h2>
           <p>Please click or tap your destination.</p>
         </div>
-        {/* City Link Form quick access */}
+        {/* City Link Form quick access 
         <div style={{ marginTop: 20 }}>
           <button
             style={{ width: 200, height: 40, backgroundColor: "#4b5563", color: "white" }}
@@ -138,7 +138,7 @@ function Menu() {
             City Link Form
           </button>
         </div>
-
+*/}
         <br />
 
         {/* Buttons */}

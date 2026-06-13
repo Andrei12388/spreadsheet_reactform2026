@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import { useNavigate } from "react-router-dom";
 
 export default function CityLinkForm() {
-  const location = useLocation();
   const navigate = useNavigate();
 
   const API_URL =
@@ -25,8 +22,6 @@ export default function CityLinkForm() {
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [allEntries, setAllEntries] = useState([]);
-  const [showAllEntries, setShowAllEntries] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -80,240 +75,19 @@ export default function CityLinkForm() {
     setLoading(false);
   }
 
-  async function fetchAllEntries() {
-    if (!API_URL) return setMessage("No API URL configured");
-
-    setLoading(true);
-    setMessage("");
-
-    try {
-      const res = await fetch(API_URL);
-      const result = await res.json();
-
-      if (result.status === "success" && result.data) {
-        setAllEntries(result.data);
-        setShowAllEntries(true);
-        setMessage(`✅ Loaded ${result.data.length} entries`);
-      } else {
-        setMessage("Failed to load entries");
-      }
-    } catch (err) {
-      console.error(err);
-      setMessage("Error fetching entries");
-    }
-
-    setLoading(false);
-  }
-
-  async function generateAllEntriesPDF() {
-  if (allEntries.length === 0) {
-    setMessage("No entries to export");
-    return;
-  }
-
-  const pdf = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: "a4"
-  });
-
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const margin = 15;
-
-  allEntries.forEach((entry, index) => {
-    if (index > 0) pdf.addPage();
-
-    let y = margin;
-
-    // ================= HEADER =================
-    pdf.setFontSize(14);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("FAMILY INTERVENTION PLAN (FIP)", pageWidth / 2, y, { align: "center" });
-
-    y += 10;
-
-    // Overall Goal label + underline style
-    pdf.setFont("helvetica", "normal");
-    const goalTable = [[
-  "Overall Goal",
-  entry.OVERALL_GOAL || "__________________________"
-]];
-
-autoTable(pdf, {
-  body: goalTable,
-  startY: y,
-  margin: { left: margin, right: margin },
-
-  styles: {
-    fontSize: 10,
-    cellPadding: 2,
-    textColor: [0, 0, 0],
-    lineColor: [0, 0, 0],
-    lineWidth: 0,
-    overflow: "linebreak"
-  },
-
-  columnStyles: {
-    0: { cellWidth: 30, fontStyle: "bold" },
-    1: { cellWidth: pageWidth - margin * 2 - 30 }
-  },
-
-  theme: "grid"
-});
-
-    y += 15;
-
-    // long underline line (visual spacing like your template)
-   // pdf.line(margin, y, pageWidth - margin, y);
-    //y += 10;
-
-    // ================= TABLE =================
-    const tableHead = [[
-      "Specific Objectives",
-      "Specific Activity",
-      "Responsible Person",
-      "Timeframe",
-      "Expected Result",
-      "Remarks"
-    ]];
-
-    const tableBody = [[
-      entry.SPE_OBJ || "",
-      entry.SPE_ACT || "",
-      entry.RES_PER || "",
-      entry.TF || "",
-      entry.EXP_RES || "",
-      entry.REMARKS || ""
-    ]];
-
-    autoTable(pdf, {
-  head: tableHead,
-  body: tableBody,
-  startY: y,
-  margin: { left: margin, right: margin },
-
-  // ================= BASE STYLE =================
-  styles: {
-    fontSize: 8,
-    cellPadding: 2,
-    valign: "top",
-    overflow: "linebreak",
-    textColor: [0, 0, 0],        // black text
-    lineColor: [0, 0, 0],        // BLACK borders
-    lineWidth: 0.2               // thin Word-like border
-  },
-
-  // ================= HEADER (NO COLOR, ONLY BOLD) =================
-  headStyles: {
-    fillColor: false,            // no background color
-    textColor: [0, 0, 0],        // black text
-    fontStyle: "bold",
-    halign: "center",
-    lineColor: [0, 0, 0],
-    lineWidth: 0.2
-  },
-
-  // ================= BODY =================
-  bodyStyles: {
-    fillColor: false,            // no shading
-    textColor: [0, 0, 0]
-  },
-
-  // ================= REMOVE STRIPES =================
-  alternateRowStyles: {
-    fillColor: false
-  },
-
-  // ================= COLUMN WIDTHS =================
-columnStyles: {
-  0: { cellWidth: "auto" },
-  1: { cellWidth: "auto" },
-  2: { cellWidth: "auto" },
-  3: { cellWidth: "auto" },
-  4: { cellWidth: "auto" },
-  5: { cellWidth: "auto" }
-},
-
-  // ================= OUTER BORDER STYLE =================
-  tableLineColor: [0, 0, 0],
-  tableLineWidth: 0.2
-
-
-     /* didDrawPage: function () {
-        pdf.setFontSize(9);
-        pdf.text(
-          `Page ${pdf.internal.getNumberOfPages()}`,
-          pageWidth / 2,
-          285,
-          { align: "center" }
-        );
-      }
-        */
-    });
-
- // ================= FOOTER SECTION =================
-    let footerY = pdf.lastAutoTable.finalY + 15;
-
-    pdf.setFontSize(10);
-    pdf.text("Prepared by:", margin, footerY);
-    pdf.text("Facilitated and Reviewed by:", pageWidth - 80, footerY);
-    footerY += 8;
-
-    pdf.text(entry.HH_GRANTEE, margin, footerY);
-    pdf.text(entry.CITY_LINK, pageWidth - 80, footerY);
-
-    footerY += 8;
-pdf.setFontSize(9);
-pdf.setFont("helvetica", "bold");
-    pdf.text("NAME OF 4Ps MEMBER", margin, footerY);
-    pdf.text("NAME OF CITY LINK", pageWidth - 80, footerY);
-
-// reset to normal
-pdf.setFont("helvetica", "normal");
-  });
-
-  pdf.save(`FIP_${new Date().toISOString().split("T")[0]}.pdf`);
-  setMessage(`✅ FIP PDF generated (${allEntries.length} entries)`);
-}
-
-  function handlePrint() {
-    window.print();
-  }
-
   return (
     <div style={{ padding: 20 }}>
       <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
-        <button onClick={() => navigate(-1)}>← Back</button>
-        <button 
-          onClick={fetchAllEntries} 
-          style={{ backgroundColor: "#8b5cf6", color: "white" }}
-          disabled={loading}
-        >
-          📋 View All Entries
-        </button>
-        <button 
-          onClick={generateAllEntriesPDF} 
-          disabled={allEntries.length === 0 || loading}
-          style={{ backgroundColor: "#2563eb", color: "white" }}
-        >
-          📥 Export All to PDF
-        </button>
+       {/*  <button onClick={() => navigate(-1)}>← Back</button> */}
       </div>
-
-      {showAllEntries && allEntries.length > 0 && (
-        <div style={{ backgroundColor: "#f0f9ff", padding: 15, borderRadius: 8, marginBottom: 20, border: "1px solid #0284c7" }}>
-          <h4>Total Entries: {allEntries.length}</h4>
-          <div style={{ maxHeight: 200, overflowY: "auto" }}>
-            {allEntries.map((entry, i) => (
-              <div key={i} style={{ padding: 8, borderBottom: "1px solid #ccc", fontSize: 12 }}>
-                <strong>Entry {i + 1}:</strong> {entry.HHID} - {entry.HH_GRANTEE}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <h3>City Link - Data Entry</h3>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 30 }}>
+<img src="/logo.png" width={260} height={80} style={{
+  display: "block",
+ 
+}}></img>
+      <h2>FAMILY INTERVENTION PLAN FORM</h2>
+      </div>
+      
 
       <form onSubmit={handleSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 15, marginBottom: 20 }}>
@@ -327,7 +101,7 @@ pdf.setFont("helvetica", "normal");
               style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
             />
           </div>
-
+<br></br>
           <div>
             <label>HH_GRANTEE</label>
             <input 
@@ -337,7 +111,7 @@ pdf.setFont("helvetica", "normal");
               style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
             />
           </div>
-
+    <br></br>
           <div>
             <label>CITY_LINK</label>
             <input 
@@ -347,19 +121,19 @@ pdf.setFont("helvetica", "normal");
               style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
             />
           </div>
-
-          <div>
-            <label>OVERALL_GOAL</label>
-            <input 
+            <br></br>
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label>OVERALL_GOAL</label> 
+            <textarea 
               name="OVERALL_GOAL" 
               value={formData.OVERALL_GOAL} 
               onChange={handleChange}
-              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
+              style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4, minHeight: 80 }}
             />
           </div>
 
           <div>
-            <label>SPE_OBJ</label>
+            <label>SPECIFIC OBJECTIVE</label>
             <select 
               name="SPE_OBJ" 
               value={formData.SPE_OBJ} 
@@ -372,9 +146,10 @@ pdf.setFont("helvetica", "normal");
               <option value="OBJ_C">Objective C</option>
             </select>
           </div>
-
+<br></br>
+<div>
           <div>
-            <label>SPE_ACT</label>
+            <label>SPECIFIC ACTION</label>
             <select 
               name="SPE_ACT" 
               value={formData.SPE_ACT} 
@@ -387,9 +162,9 @@ pdf.setFont("helvetica", "normal");
               <option value="ACT_3">Action 3</option>
             </select>
           </div>
-
+<br></br>
           <div>
-            <label>RES_PER</label>
+            <label>RESPONSIBLE PERSON</label>
             <input 
               name="RES_PER" 
               value={formData.RES_PER} 
@@ -397,9 +172,9 @@ pdf.setFont("helvetica", "normal");
               style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
             />
           </div>
-
+<br></br>
           <div>
-            <label>TF</label>
+            <label>TIME FRAME</label>
             <input 
               name="TF" 
               value={formData.TF} 
@@ -407,9 +182,9 @@ pdf.setFont("helvetica", "normal");
               style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
             />
           </div>
-
+<br></br>
           <div>
-            <label>EXP_RES</label>
+            <label>EXPECTED RESULTS</label>
             <input 
               name="EXP_RES" 
               value={formData.EXP_RES} 
@@ -417,7 +192,7 @@ pdf.setFont("helvetica", "normal");
               style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4 }}
             />
           </div>
-
+</div>
           <div style={{ gridColumn: "1 / -1" }}>
             <label>REMARKS</label>
             <textarea 
@@ -427,6 +202,7 @@ pdf.setFont("helvetica", "normal");
               style={{ width: "100%", padding: 8, border: "1px solid #ccc", borderRadius: 4, minHeight: 80 }}
             />
           </div>
+
         </div>
 
         <div style={{ display: "flex", gap: 10 }}>
