@@ -133,14 +133,35 @@ export default function CityLinkForm() {
     y += 10;
 
     // Overall Goal label + underline style
-    pdf.setFontSize(11);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Overall Goal:", margin, y);
-
     pdf.setFont("helvetica", "normal");
-    pdf.text(entry.OVERALL_GOAL || "__________________________", margin + 35, y);
+    const goalTable = [[
+  "Overall Goal",
+  entry.OVERALL_GOAL || "__________________________"
+]];
 
-    y += 10;
+autoTable(pdf, {
+  body: goalTable,
+  startY: y,
+  margin: { left: margin, right: margin },
+
+  styles: {
+    fontSize: 10,
+    cellPadding: 2,
+    textColor: [0, 0, 0],
+    lineColor: [0, 0, 0],
+    lineWidth: 0,
+    overflow: "linebreak"
+  },
+
+  columnStyles: {
+    0: { cellWidth: 30, fontStyle: "bold" },
+    1: { cellWidth: pageWidth - margin * 2 - 30 }
+  },
+
+  theme: "grid"
+});
+
+    y += 15;
 
     // long underline line (visual spacing like your template)
    // pdf.line(margin, y, pageWidth - margin, y);
