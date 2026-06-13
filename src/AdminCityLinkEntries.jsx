@@ -37,7 +37,7 @@ export default function AdminCityLinkEntries() {
   }
 
   function openLink() {
-  window.open("https://docs.google.com/spreadsheets/d/1QmCbvUmbwztsIFzdf8KDML5y_kzA42rlD8NEe4_DGpc/edit?gid=0#gid=0", "_blank", "noopener,noreferrer");
+  window.open("https://docs.google.com/spreadsheets/d/1QmCbvUmbwztsIFzdf8KDML5y_kzA42rlD8NEe4_DGpc/", "_blank", "noopener,noreferrer");
 }
 
   function handlePrint() {
