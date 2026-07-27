@@ -32,7 +32,17 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/api\/holyspirit/, "")
-      }
+      },
+      "/api/jmc": {
+        target:
+          "https://script.google.com/macros/s/AKfycbwyMl6M_Rkv-0fCwj0-N8YRYONY2TqP8-D4Qiazi_0_cYpu_RYb89ToVLPEEtoR71Pg/exec",
+
+        changeOrigin: true,
+        secure: true,
+
+        rewrite: (path) =>
+          path.replace(/^\/api\/jmc/, ""),
+      },
     }
   }
 });
