@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 
 function JMCMenu() {
-  console.log("JMC Report");
+  useEffect(() => {
+ document.title = "JMC Report 2026";
+}, []);
 
   // =========================
   // API URLS
