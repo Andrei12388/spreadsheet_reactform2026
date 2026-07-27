@@ -9,7 +9,7 @@ function JMCMenu() {
   // =========================
   // API URLS
   // =========================
-const API_URL = "/api/jmc";
+const API_URL = "https://script.google.com/macros/s/AKfycbwyMl6M_Rkv-0fCwj0-N8YRYONY2TqP8-D4Qiazi_0_cYpu_RYb89ToVLPEEtoR71Pg/exec";
 
   const navigate = useNavigate();
 
