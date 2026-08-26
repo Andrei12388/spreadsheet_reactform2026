@@ -27,9 +27,9 @@ function App() {
        <Route path="/fip" element={<CityLinkForm />} />
        <Route path="/admin/fip" element={<AdminCityLinkEntries />} />
 
-       {/*NewForm App Page */}
-       <Route path="/newForm" element={<NewForm />} />
-       <Route path="/admin/newForm" element={<AdminNewForm />} />
+       {/*scsr App Page */}
+       <Route path="/scsr" element={<NewForm />} />
+       <Route path="/admin/scsr" element={<AdminNewForm />} />
 
     </Routes>
   )
